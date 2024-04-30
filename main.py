@@ -1,11 +1,17 @@
 # from google.colab import drive
 # drive.mount('/content/drive')
 
-from gpu_settings import gpu_settings1, gpu_settings2, gpu_settings3
-# gpu_settings1()
-gpu_settings2()
-gpu_settings3()
+# from gpu_settings import gpu_settings1, gpu_settings2, gpu_settings3
+# # gpu_settings1()
+# gpu_settings2()
+# gpu_settings3()
 
+#**********************************************************************************************************************#
+# # Load first Menu-item
+#**********************************************************************************************************************#
+
+
+from menus import *
 
 # def print_hi(name):
 #     # Use a breakpoint in the code line below to debug your script.
