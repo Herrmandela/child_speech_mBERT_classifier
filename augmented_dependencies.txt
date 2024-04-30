@@ -1,0 +1,12 @@
+!pip install pandas --quiet
+!pip install -q transformers --quiet
+!pip install transformers[torch] --quiet
+!pip install transformers[sentencepiece] --quiet
+!pip install datasets --quiet
+!pip install --upgrade gensim --quiet
+!pip install sacremoses --quiet
+
+# Install the nlpaug module
+!pip install nlpaug --quiet
+
+# Install the tokenizer
