@@ -2,7 +2,7 @@
 # drive.mount('/content/drive')
 
 # from gpu_settings import gpu_settings1, gpu_settings2, gpu_settings3
-# # gpu_settings1()
+# gpu_settings1()
 # gpu_settings2()
 # gpu_settings3()
 
