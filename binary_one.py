@@ -4,7 +4,7 @@
 
 print()
 print()
-print("|| +++In binary_one.py - Binary Model COMMAND +++ Loaded ||")
+print("|| +++ Binary Model COMMAND +++ Loaded ||")
 print()
 print()
 
@@ -14,23 +14,25 @@ print()
 
 from gpu_settings import *
 
-device_name = gpu_settings1
-gpu_settings1()                             # number 3
+#device_name = gpu_settings1
+#gpu_settings1()
 
 device = gpu_settings2
-gpu_settings2()                             # number 4
+gpu_settings2()
 
+print(device)
 import imports
 #**********************************************************************************************************************#
 # #  Language Choice Menu
 #**********************************************************************************************************************#
+
 user_input = ""
 
 depth_choice = ""
 
 experiment_choice = ""
 
-from load_data import *
+from binary_load_data import *
 
 def choose_language():
     global user_input
@@ -108,7 +110,7 @@ saveMemory()                # 6
 # # Binary Model Depth Menu
 #**********************************************************************************************************************#
 
-from training import *      # 7
+from training import trainingVanilla, trainingShallow, trainingInherent      # 7
 
 
 def choose_model_depth():
@@ -118,7 +120,7 @@ def choose_model_depth():
     while True:
         print()
 
-        print('** MENU ++++++ in binary_one.py **')
+        print('** MENU **')
         print('Vanilla - ( * No layers Frozen * )')
         print('Shallow - ( * Shallow Layers Frozen + Output Layer * )')
         print('Inherent - ( * All Layers Frozen Except for Input and Output Layers * )')
@@ -140,32 +142,36 @@ if depth_choice == 'vanilla':
     print('Processing...')
     #time.sleep(4)
     print('You chose the Vanilla Model, All LAYERS WILL UNDERGO TRAINING')
-    trainingVanilla
+    trainingVanilla()
 
 elif depth_choice == 'shallow':
     print()
     print('Processing...')
     #time.sleep(4)
     print('You chose the Shallow Model, ONLY THE INITIAL LAYERS WILL UNDERGO TRAINING')
-    trainingShallow
+    trainingShallow()
 
 elif depth_choice == 'inherent':
     print()
     print('Processing...')
     #time.sleep(4)
     print('You chose the Inherent Model, NO LAYERS WILL UNDERGO TRAINING')
-    trainingInherent
+    trainingInherent()
 
-print("user_input is:", user_input)
-
-optimizer()                             # 8 in training.py
+print("depth choice is:", depth_choice)
 
 
-linear_schedule()                       # 9 in training.py
 
 
-flat_accuracy()                         # 10 in functionality.py
-format_time()                           # 11 in functionality.py
+from training import optimizer_and_scheduler, train, training_summary
+
+optimizer_and_scheduler()                             # 8 in training.py
+
+print()
+print()
+print("!!! Ran Optimizer !!!")
+print()
+print()
 
 
 train()                                 # 12 in training.py
@@ -176,14 +182,12 @@ training_summary()                      # 13 in training.py
 # *******************************************************
 # VIS
 # *******************************************************
-from data_visualization import *
+from binary_datavis import plotValidationAndLoss, plotMCC
 plotValidationAndLoss(user_input, depth_choice, experiment_choice)                 # 14 in datavisualization.py
-
-# from mcc_data_prep import mcc_data_prep
-# mcc_data_prep()                                                                    # 15 in mcc_data_prep.py
+                                                                 # 15 in mcc_data_prep.py
 
 from mcc_evaluation import *
-multiclass_mcc_evaluation()                                                        # 16 in mcc_evaluation
+binary_mcc_evaluation()                                                        # 16 in mcc_evaluation
 plotMCC(user_input, depth_choice, experiment_choice)                               # 17 in datavisualization.py
 
 # *******************************************************
@@ -195,8 +199,8 @@ output_dir = save_model()
 
 #print(output_dir)
 
+from sample_sentences import input_texts
+
 load_model(output_dir)                            # 19 in functionality.py
 
-from sample_sentences import *
-
-sampleSentences()                                 # 20 in functionlity.py
+#sampleSentences()                                 # 20 in functionlity.py

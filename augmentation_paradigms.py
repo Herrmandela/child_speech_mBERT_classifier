@@ -11,36 +11,26 @@ def synonym_augmentation():         # 19
         aug_src='wordnet',
         aug_max=3)
 
-    return aug_syn
-def contextual_embedding_augmentation():    # 19
 
-    print()
-    print('Contextual Embedding augmentation ++++ in augmented_paradigms.py')
-
-    aug_emb = naw.ContextualWordEmbsAug(
-        # Other models include 'distilbert-base-uncased', 'roberta-base', etc.
-        model_path=PATH,
-        # You can also choose "insert"
-        action="substitute",
-        # Use GPU
-        device='cuda')
-
-    return aug_emb
+# aug_emb = naw.ContextualWordEmbsAug(
+#   # Other models include 'distilbert-base-uncased', 'roberta-base', etc.
+#   model_path=PATH,
+#   # You can also choose "insert"
+#   action="substitute",
+#   # Use GPU
+#   device='cuda')
 
 #**********************************************************************************************************************#
 # # BACKTRANSLATION
 #**********************************************************************************************************************#
 
-
-# def backtranslation_augmentation_greek():
-#     # Initiate the back translation augmentation
-#     aug_bt = naw.BackTranslationAug(
-#       # Translate English to Greek
-#       to_model_name = "Helsinki-NLP/opus-mt-en-grk",
-#       # Translate from Greek back to English
-#       from_model_name = "Helsinki-NLP/opus-mt-grk-en",
-#       # Use GPU
-#       device = 'cuda')
+# aug_bt = naw.BackTranslationAug(
+#   # Translate English to Greek
+#   from_model_name = "Helsinki-NLP/opus-mt-grk-en",
+#   # Translate from Greek back to English
+#   to_model_name = "Helsinki-NLP/opus-mt-en-grk",
+#   # Use GPU
+#   device = 'cuda')
 
 
 # **********************************************************************************************************************#
@@ -51,13 +41,13 @@ def contextual_embedding_augmentation():    # 19
 def synonym_evaluation_score():
     # Evaluate the synonym text augmentation
     score_synonym = evaluate_aug(aug_strategy='synonym',
-                                 n=2,
+                                 n=1,
                                  train=train,
                                  ds_val=ds_val,
                                  ds_test=ds_test)
 
-    print(score_synonym)
-    return score_synonym
+    #print(score_synonym)
+    #return score_synonym
 
 # **********************************************************************************************************************#
 # # Contextual Evaluation
@@ -72,8 +62,8 @@ def contextual_evaluation_score():
                                    ds_val=ds_val,
                                    ds_test=ds_test)
 
-    print(score_embedding)
-    return score_embedding
+    # print(score_embedding)
+    # return score_embedding
 
 # **********************************************************************************************************************#
 # # BACKTRANSLATION Evaluation
@@ -83,13 +73,13 @@ def contextual_evaluation_score():
 def backtranslation_evaluation_score():
     # Evaluate the back translation text augmentation
     score_backTransLation = evaluate_aug(aug_strategy='backtranslation',
-                                         n=2,
+                                         n=1,
                                          train=train,
                                          ds_val=ds_val,
                                          ds_test=ds_test)
 
-    print(score_backTransLation)
-    return score_backTransLation
+    # print(score_backTransLation)
+    # return score_backTransLation
 
 #**********************************************************************************************************************#
 # # Evaluation of Augmentation Strategies
@@ -118,8 +108,8 @@ def evaluate_aug(aug_strategy, n, train, ds_val, ds_test):
     for i in train.index:
         if aug_strategy == "synonym":
             lst_augment = aug_syn.augment(train['text'].loc[i], n = n)
-        elif aug_strategy == 'embedding':(
-            lst_augment) = aug_emb.augment(train['text'].loc[i], n = n)
+        elif aug_strategy == 'embedding':
+            lst_augment = aug_emb.augment(train['text'].loc[i], n = n)
         elif aug_strategy == 'backtranslation':
             lst_augment = aug_bt.augment(train['text'].loc[i], n = n)
         for augment in lst_augment:
@@ -181,10 +171,31 @@ def evaluate_aug(aug_strategy, n, train, ds_val, ds_test):
     # Start the training process
     trainer.train()
 
+    train_loss = []
+    for elem in trainer.state.log_history:
+        if 'loss' in elem.keys():
+            train_loss.append(elem['loss'])
+
+
+    Macro_f1 = []
+    for elem in trainer.state.log_history:
+        if 'eval_f1' in elem.keys():
+            Macro_f1.append(elem['eval_f1'])
+
+    accuracy = []
+    for elem in trainer.state.log_history:
+        if 'eval_accuracy' in elem.keys():
+            accuracy.append(elem['eval_accuracy'])
+
+
+    val_loss = []
+    for elem in trainer.state.log_history:
+        if 'eval_loss' in elem.keys():
+            val_loss.append(elem['eval_loss'])
+
     # Use the model to predict the test set
     preds_output = trainer.predict(text_encoded["test"])
     print(preds_output.metrics)
-
 
     model.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
@@ -193,9 +204,6 @@ def evaluate_aug(aug_strategy, n, train, ds_val, ds_test):
     augmented_text.clear()
     augmented_text_labels.clear()
 
-    return preds_output, augmented_text_labels
+    #return preds_output, augmented_text_labels
 
-    # tokenizer.model_max_length
-
-
-
+    # tokenizer.model_max_length"""

@@ -1,17 +1,16 @@
 from transformers import BertTokenizer
+from binary_load_data import responses, scores
 import numpy as np
+import torch
 
 print()
 print("Binary +++ model_tokenizer.py")
 print()
 
-
-
-global responses, scores
-
-
 # # Define PATH
 #PATH = "/Users/ph4533/Desktop/PyN4N/gitN4N/mBERT"
+
+PATH = "/content/drive/MyDrive/data/mBERT"
 
 
 #**********************************************************************************************************************#
@@ -29,6 +28,7 @@ tokenizer = BertTokenizer.from_pretrained(PATH, do_lower_case=True)
 
 responses = np.delete(responses, np.where(responses == 'nan'))
 
+
 # # Tokenize the Dataset - using the encode function for parsing and data-prep needs.
 
 
@@ -45,8 +45,6 @@ for response in responses:
 
 # print the Max_length to adjust model parameters.
 print('Max sentence length: ', max_len)
-
-
 
 
 

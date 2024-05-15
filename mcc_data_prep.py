@@ -1,4 +1,6 @@
 # from torch.utils.data import TensorDataset
+from menus import experiment_choice
+from gpu_settings import device
 
 #**********************************************************************************************************************#
 # Preparing data for the MCC evaluation -
@@ -6,25 +8,34 @@
 # 15!
 def mcc_data_prep():
 
+    #PATH = "/content/drive/MyDrive/data/mBERT"
+
+    PATH = "/Users/ph4533/Desktop/PyN4N/Py38/gn4n/mBERT"
+
+    tokenizer = BertTokenizer.from_pretrained(PATH, do_lower_case=True)
 
     print()
     print("Binary or multiclass - MCC Data Preparation in mcc_data_prep.py")
 
-
     # Load the dataset into a Pandas dataframe. Originally, this is where the
     # Multilingual data was loaded for model evaluation.
 
-    df_test = pd.read_csv("/Users/ph4533/Desktop/PyN4N/gitN4N/datasets/ErrorTypesANON/AllDataCELF.csv",
-                          keep_default_na=False,
-                          sep=";")
+    df_mcc = pd.read_csv("/content/drive/MyDrive/data/Multilingual/allData.csv",
+                     keep_default_na=False,
+                     sep = ";")
+
+    # df_mcc = pd.read_csv("/Users/ph4533/Desktop/PyN4N/Py38/gn4n/data/multilingual/allData.csv",
+    #                  keep_default_na=False,
+    #                  sep = ";")
+
     # Report the number of sentences.
     #print('Number of test sentences: {:,}\n'.format(df_test.shape[0]))
 
     #df_test.columns
 
     # Create sentence and label lists
-    responses = df_test.RESPONSE.values
-    scores = df_test.TOLD_SCORING.values   # in the MultiClass and Augmented models this is CELF
+    responses = df_mcc.RESPONSE.values
+    scores = df_mcc.TOLD_SCORING.values   # in the MultiClass and Augmented models this is CELF
 
     # Tokenize all of the sentences and map the tokens to their word IDs
     input_ids = []
@@ -69,5 +80,5 @@ def mcc_data_prep():
                                        sampler=prediction_sampler,
                                        batch_size=batch_size)
 
-   return prediction_data, prediction_sampler, prediction_dataloader,
+    return prediction_data, prediction_sampler, prediction_dataloader
 

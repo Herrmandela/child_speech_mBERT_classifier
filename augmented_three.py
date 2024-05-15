@@ -13,28 +13,28 @@ print()
 # # GPU- Settings and Imports  ****
 #**********************************************************************************************************************#
 # Also defined in augmented_load_data.py
-PATH = "/Users/ph4533/Desktop/PyN4N/gitN4N/mBERT"
-tokenizer = AutoTokenizer.from_pretrained(PATH)
 
 from gpu_settings import *
 
-device_name = gpu_settings3
-gpu_settings3()
+device_name = gpu_settings2
+gpu_settings2()
 
 import augmented_imports
+from menus import experiment_choice
 
 user_input = ""
 
 depth_choice = ""
 
+aug_or_ex = ""
+
 augmentation_choice = ""
 
-from augmented_load_data import *
 
 # **********************************************************************************************************************#
 #   Language Choice Menu
 # **********************************************************************************************************************#              # 1
-
+from augmented_load_data import *                     # X
 
 def choose_language():                                # 1
     global user_input
@@ -43,7 +43,7 @@ def choose_language():                                # 1
 
     while True:
         print()
-        print('** MENU ++++++ in augmented_three.py **')
+        print('** MENU **')
         print('- English')
         print('- Farsi')
         print('- Greek')
@@ -94,27 +94,10 @@ elif user_input == 'exit':
     exit()
 
 #**********************************************************************************************************************#
-# #  Special Validation Set
-#**********************************************************************************************************************#
-from augmented_validation import augmented_validation
-augmented_validation()                                  # 2
-
-
-#**********************************************************************************************************************#
 # # Depth Choice and Training Parameters
 #**********************************************************************************************************************#
-
-
-from augmented_data_prep import *
-augmented_data_split()                                  # 3
-
-from augmented_training import *
-tokenize(batch)                                         # 4
-text_encoder(sentences)                                 # 5
-
-label_id_dictionaries()                                 # 6
-
-
+import augmented_data_prep
+                                        # 4                                #                                # 6
 def choose_model_depth():
 
     layer_options = ('vanilla', 'shallow', 'inherent')
@@ -122,7 +105,7 @@ def choose_model_depth():
     while True:
         print()
 
-        print('** MENU ++++++ in augmented_three.py **')
+        print('** MENU **')
         print('Vanilla - ( * No layers Frozen * )')
         print('Shallow - ( * Shallow Layers Frozen + Output Layer * )')
         print('Inherent - ( * All Layers Frozen Except for Input and Output Layers * )')
@@ -140,6 +123,8 @@ def choose_model_depth():
 
 
 depth_choice = choose_model_depth()
+
+from augmented_training import *                       # 8 this includes trainer.train()
 
 if depth_choice == 'vanilla':
     print()
@@ -163,31 +148,22 @@ elif depth_choice == 'inherent':
     augmented_training_inherent()
 
 
-from augmented_metrics import compute_metrics
-compute_metrics(pred)                                   # 7
 
-augmented_set_training_args(self)                       # 8 this includes trainer.train()
 
-printerclassback = PrinterCallback()
-printerclassback.on_epoch_end()                         # 9
-printerclassback.augmented_set_training_args()          # 10
+from augmented_datavis import *
+#preds_output(trainer)
 
-from data_visualization import (augmented_mccPlot,
-                                augmented_confusion_matrix,
-                                augmented_training_and_validation_plot)
+print("Augmented Training and Validation Plot")
+augmented_training_and_validation_plot(experiment_choice, depth_choice, user_input)                # 11
 
-augmented_training_and_validation_plot()                # 11
-
-from augmented_metrics import preds_output
-preds_output(trainer)                                   # 12
-
-augmented_confusion_matrix()                            # 13
+print("Augmented Confusion Matrix")
+augmented_confusion_matrix(experiment_choice, depth_choice, user_input)                            # 13
 
 
 
 from functionality import augmented_save_model, augmented_load_model
 augmented_save_model()                                  # 14
-augmented_load_model()                                  # 15
+augmented_load_model(output_dir)                                  # 15
 
 from sample_sentences import augmented_sample_sentences
 augmented_sample_sentences()                            # 16
@@ -195,27 +171,28 @@ augmented_sample_sentences()                            # 16
 from mcc_evaluation import augmented_mcc_evaluation
 augmented_mcc_evaluation()                              # 17
 
-augmented_mccPlot()                                     # 18
+augmented_mccPlot(experiment_choice, depth_choice, user_input)                                     # 18
 
+print("Augmented Confusion Matrix")
+augmented_confusion_matrix(experiment_choice, depth_choice, user_input)                            # 13
 
 
 #**********************************************************************************************************************#
 # # Augmentation Paradigm Choice
 #**********************************************************************************************************************#
 
-from augmentation_paradigms import *
-
 def choose_augmentation_paradigm():                   # 19
 
-    layer_options = ('synonym', 'contextual', 'backtranslation')
+    layer_options = ('synonym', 'contextual', 'backtranslation', 'exit')
 
     while True:
         print()
 
-        print('** MENU ++++++ in augmented_three.py **')
+        print('** MENU **')
         print('Synonym - ( * Synonym Embeddings* )')
         print('Contextual - ( * Contextual Embeddings * )')
         print('Backtranslation - ( ! Currently Not Available ! )')
+        print('Exit')
 
         print()
 
@@ -231,12 +208,13 @@ def choose_augmentation_paradigm():                   # 19
 
 augmentation_choice = choose_augmentation_paradigm()
 
+from augmentation_paradigms import *
+
 if augmentation_choice == 'synonym':
     print()
     print('Processing...++++++ in augmented_three.py')
     # time.sleep(4)
     print('You chose the Vanilla Model, All LAYERS WILL UNDERGO TRAINING')
-    synonym_augmentation()                                                           # 19
     synonym_evaluation_score()                                                       # 20
 
 
@@ -245,10 +223,12 @@ elif augmentation_choice == 'contextual':
     print('Processing...++++++ in augmented_three.py')
     # time.sleep(4)
     print('You chose the Shallow Model, ONLY THE INITIAL LAYERS WILL UNDERGO TRAINING')
-    contextual_embedding_augmentation()                                              # 19
     contextual_evaluation_score()                                                    # 20
 
-
+elif augmentation_choice == 'exit':
+    print()
+    print(' Good Bye!')
+    exit()
 
 # elif augmentation_choice == 'backtranslation':
 #     print()
@@ -262,12 +242,8 @@ elif augmentation_choice == 'contextual':
 # # Samples and MCC of Augmented
 #**********************************************************************************************************************#
 
-augmented_load_model()                                                               # 21
-augmented_sample_sentences()                                                         # 22
-
-from mcc_evaluation import augmented_mcc_evaluation
+augmented_load_model(output_dir)
+augmented_sample_sentences()
 
 augmented_mcc_evaluation()                                                           # 23
-
-augmented_mccPlot()                                                                  # 24
-
+augmented_mccPlot(experiment_choice, depth_choice, user_input)                       # 24

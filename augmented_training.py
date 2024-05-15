@@ -1,106 +1,83 @@
 print()
 print()
 print("|| +++In augmented_training.py +++ Loaded in augmented_three.py ||")
-print()
-print()
 
-#
-# global PATH
-#
-# tokenizer = AutoTokenizer.from_pretrained(model)
+from augmented_data_prep import sentences, text_encoded
+from augmented_metrics import compute_metrics
 
+# Set the model path
+PATH = "/content/drive/MyDrive/data/mBERT"
+
+#PATH = "/Users/ph4533/Desktop/PyN4N/Py38/gn4n/mBERT"
+
+# Define the tokenizer
+tokenizer = BertTokenizer.from_pretrained(PATH)
+
+#**********************************************************************************************************************#
+# # Compute Metrics
+#**********************************************************************************************************************#
+
+
+"""
 #**********************************************************************************************************************#
 # # Define Tokenization Process for the Augmented-Models
 #**********************************************************************************************************************#
+# Define a function to compute two metrics--accuracy and f1 score
+def compute_metrics(pred):
+  # True labels
+  labels = pred.label_ids
+
+  preds = pred.predictions.argmax(-1)
+  # Note: average = "weighted" will weigh the f1_score by class sample size
+  f1 = f1_score(labels, preds, average = "weighted")
+  acc = accuracy_score(labels, preds)
+  # Note: Need to return a dictionary
+  return {"accuracy": acc, "f1": f1}
 
 def tokenize(batch):            # 4
-    print()
-    print("")
-    print("Tokenization Process Function +++++++ in augmented_training.py")
+    
+    global PATH, tokenizer 
 
     return tokenizer(
         batch["text"],
         # Pad the examples with zeros to the size of the longest one in a batch
-        padding = True,
+        padding = True, 
         # Truncate the examples to the model’s maximum context size (which is 512 for this model)
         truncation = True)
 
-#**********************************************************************************************************************#
-# # Text encoding function for the Augmented Models
-#**********************************************************************************************************************#
-
-
-#def text_encoder(sentences):
-def text_encoder():             # 5
-
-    print()
-    print("")
-    print("Text encoding function +++++++ in augmented_training.py")
-
-    # Once we’ve defined a processing function, we can apply it across all the splits in the DataDict.
-    text_encoded = sentences.map(
-      tokenize,
-      # Encode the sentences in batches
-      batched = True,
-      batch_size = None)
+# Once we’ve defined a processing function, we can apply it across all the splits in the DataDict.
+text_encoded = sentences.map(tokenize, batched=True, batch_size=None)
 
     # Apply the tokenize function on the full dataset as a single batch
     # Note: This ensures that the input tensors and attention masks have the same shape globally
     # Alternatively, we can specify max_length in the tokenize() function to ensure the same
 
     # Remove the text column from the encoded DatasetDict because the model does not use# it.
-    text_encoded = text_encoded.remove_columns(['token_type_ids', 'text'])
+text_encoded = text_encoded.remove_columns(['token_type_ids', 'text'])
 
     # Since the model expects tensors as inputs,
     # we will convert the input_ids and attention_mask columns to the "torch" format.
-    text_encoded.set_format("torch", columns = ["input_ids", "attention_mask", "label"])
+text_encoded.set_format("torch", columns = ["input_ids", "attention_mask", "label"])
+"""
 
-    return text_encoded
 
 #**********************************************************************************************************************#
 # # Label and ID Dictionaries for the Augmented-Models
 #**********************************************************************************************************************#
 
+device = torch.device("cuda")
 
-def label_id_dictionaries():            # 6
+# Define two dictionaries that convert between ids (0, 1, 2, 3) and labels (strings)
+# Note: By adding label2id and id2label to our model's config,
+# we will get friendlier labels in the inference API.
+label2id = {}
+id2label = {}
+labels = ['incorrect', 'pass', 'acceptable ', 'correct']
+for i, label_name in enumerate(labels):
+    label2id[label_name] = str(i)
+    id2label[str(i)] = label_name
 
-    print()
-    print("")
-    print("Label and ID Dictionaries +++++++ in augmented_training.py")
-
-
-    Define two dictionaries that convert between ids (0, 1, 2, 3) and labels (strings)
-    # Note: By adding label2id and id2label to our model's config,
-    # we will get friendlier labels in the inference API.
-    label2id = {}
-    id2label = {}
-    labels = ['incorrect', 'pass', 'acceptable ', 'correct']
-    for i, label_name in enumerate(labels):
-        label2id[label_name] = str(i)
-        id2label[str(i)] = label_name
-
-    # Take a look the two dictionaries
-    #label2id, id2label, len(label2id)
-
-    return label2id, id2label
-
-#**********************************************************************************************************************#
-# # Define Training Depth for the Augmented-Models
-#**********************************************************************************************************************#
-
-
-def augmented_training_vanilla():
-
-    print()
-    print("")
-    print("Define Model Parameters ++++ In augmented_training.py")
-    print('The Augmented Vanilla Model Was Chosen in augmented_training.py')
-
-
-    global tokenizer
-    global PATH
-
-    model = AutoModelForSequenceClassification.from_pretrained(
+model = AutoModelForSequenceClassification.from_pretrained(
         PATH,  # Use the 12-layer BERT model, with an uncased vocab.
         # Number of classes/labels
         num_labels=len(label2id),   # A dictionary linking label to id
@@ -109,8 +86,29 @@ def augmented_training_vanilla():
     )
 
 
-    model.cuda()                       # Tell the model to run on GPU
+# Take a look the two dictionaries
+# label2id, id2label, len(label2id)
 
+# return label2id, id2label
+
+#**********************************************************************************************************************#
+# # Define Training Depth for the Augmented-Models
+#**********************************************************************************************************************#
+
+
+def augmented_training_vanilla():
+
+
+    print()
+    print("")
+    print("Define Model Parameters ++++ In augmented_training.py")
+    print('The Augmented Vanilla Model Was Chosen in augmented_training.py')
+
+    global tokenizer, PATH, model, device
+
+    model.cuda()                        # Tell the model to run on GPU
+
+    print("model : ", model, "type : ", type(model))
     return model
 
 
@@ -121,17 +119,7 @@ def augmented_training_inherent():
     print("Define Model Parameters ++++ In augmented_training.py")
     print('The Augmented Inherent Model was Chosen in augmented_training.py')
 
-
-    global tokenizer
-    global PATH
-
-    model = AutoModelForSequenceClassification.from_pretrained(
-        PATH,  # Use the 12-layer BERT model, with an uncased vocab.
-        # Number of classes/labels
-        num_labels=len(label2id),  # A dictionary linking label to id
-        label2id=label2id,  # A dictionary linking id to label
-        id2label=id2label
-    )
+    global tokenizer, PATH, model
 
     for name, param in model.named_parameters():
         if 'classifier' not in name: # classifier layer
@@ -154,16 +142,8 @@ def augmented_training_shallow():
     print("Define Model Parameters ++++ In augmented_training.py")
     print('The Augmented Shallow Model was Chosen in augmented_training.py')
 
-    global tokenizer
-    global PATH
+    global tokenizer, PATH, model
 
-    model = AutoModelForSequenceClassification.from_pretrained(
-        PATH,  # Use the 12-layer BERT model, with an uncased vocab.
-        # Number of classes/labels
-        num_labels=len(label2id),  # A dictionary linking label to id
-        label2id=label2id,  # A dictionary linking id to label
-        id2label=id2label
-    )
 
     for name, param in model.named_parameters():
         if 'classifier' not in name: # classifier layer
@@ -182,6 +162,7 @@ def augmented_training_shallow():
 #**********************************************************************************************************************#
 # # Define Training with LoRA
 #**********************************************************************************************************************#
+"""
 def lora_training_params():
     from transformers import AutoModelForTokenClassification
     from peft import PeftModel
@@ -198,172 +179,123 @@ def lora_training_params():
     inference_model = PeftModel.from_pretrained(model, "lora_model_fintetuned")
     # merge and save model
     merged_model = inference_model.merge_and_unload()
-    merged_model.save_pretrained("./full_finetuned_model")
+    merged_model.save_pretrained("./full_finetuned_model")"""
 
-#**********************************************************************************************************************#
-# # CallBack for the Augmented-Models
-#**********************************************************************************************************************#
+# **********************************************************************************************************************#
+# # Define Training Arguments and CallBack for the Augmented-Models
+# **********************************************************************************************************************#
+
+
+print()
+print("9")
+print("Augmented training arguments ++++ In augmented_training.py ")
+
+output_dir = input("Please enter the output directory: ")
+# Batch size
+batch_size = 32
+
+max_length = 28
+
+# Number of epochs
+num_epochs = int(input("Please enter the number of epochs: (We recommend 3-4)"))
+
+# Training argument
+training_args = TrainingArguments(
+    # Output directory
+    # Note: All model checkpoints will be saved to the folder named `model_name`
+    output_dir,
+    # Number of epochs
+    num_train_epochs=num_epochs,
+    # Learning rate
+    learning_rate=2e-5,
+    # Batch size for training and validation
+    per_device_train_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size,
+    # Weight decay for regularization
+    weight_decay=0.01,
+    warmup_steps=100,
+    logging_steps=178,
+    # Validate the model using the val set after each epoch
+    evaluation_strategy="epoch",
+    # Load the best model at the end of training
+    load_best_model_at_end=True,
+    # Push to Huggingface Hub
+    # It could be helpful to push the model to the Hub for sharing and using pipeline(), but
+    # it takes a very long time to push the model, so we choose not do it here.
+    push_to_hub=False,
+    # Save model checkpoint after each epoch
+    save_strategy="epoch")
+
+# Define the trainer
+
+trainer = Trainer(
+    # Model
+    model=model,
+    # Training argument
+    args=training_args,
+    # Metrics (f1 score and accuracy)
+    compute_metrics=compute_metrics,
+    # Train and val Datasets
+    train_dataset=text_encoded["train"],
+    eval_dataset=text_encoded["val"],
+    # Tokenizer
+    tokenizer=tokenizer)
+
+print("8")
+print("Garbage Collector to clean Memory ++++++ in augmented_training.py")
+
+gc.collect()
+torch.cuda.empty_cache()
+
+print("Trainer.train() ++++++ in augmented_training.py")
+print("8")
+
+trainer.train()
+
+trainer.state.log_history
 
 class PrinterCallback(TrainerCallback):
-
-    def on_epoch_end(self, args, state, control, logs=None, **kwargs):   # 9
+    def on_epoch_end(self, args, state, control, logs=None, **kwargs):
         print(f"Epoch {state.epoch}: ")
 
-    # **********************************************************************************************************************#
-    # # Define Training Arguments for the Augmented-Models
-    # **********************************************************************************************************************#
+label2id, id2label, len(label2id)
 
-    def augmented_set_training_args(self):                              # 10
+# **********************************************************************************************************************#
+# # Defining metrics
+# **********************************************************************************************************************#
 
-        print()
-        print("9")
-        print("Augmented training arguments ++++ In augmented_training.py ")
+preds_output = trainer.predict(text_encoded["val"])
 
-        ## Define the training arguments
-        output_dir = input("Please enter the output directory: ")
-        # Batch size
-        batch_size = 32
+preds_output.metrics
 
-        # Number of epochs
-        num_epochs = 4
+y_preds = np.argmax(preds_output.predictions, axis = 1)
 
-        # Training argument
-        training_args = TrainingArguments(
-            # Output directory
-            # Note: All model checkpoints will be saved to the folder named `model_name`
-            output_dir,
-            # Number of epochs
-            num_train_epochs=num_epochs,
-            # Learning rate
-            learning_rate=2e-5,
-            # Batch size for training and validation
-            per_device_train_batch_size=batch_size,
-            per_device_eval_batch_size=batch_size,
-            # Weight decay for regularization
-            weight_decay=0.01,
-            warmup_steps=100,
-            logging_steps=178,
-            # Validate the model using the val set after each epoch
-            evaluation_strategy="epoch",
-            # Load the best model at the end of training
-            load_best_model_at_end=True,
-            # Push to Huggingface Hub
-            # It could be helpful to push the model to the Hub for sharing and using pipeline(), but
-            # it takes a very long time to push the model, so we choose not do it here.
-            push_to_hub=False,
-            # Save model checkpoint after each epoch
-            save_strategy="epoch")
-
-        # Define the trainer
-
-        trainer = Trainer(
-            # Model
-            model=model,
-            # Training argument
-            args=training_args,
-            # Metrics (f1 score and accuracy)
-            compute_metrics=compute_metrics,
-            # Train and val Datasets
-            train_dataset=text_encoded["train"],
-            eval_dataset=text_encoded["val"],
-            # Tokenizer
-            tokenizer=tokenizer)
-
-        print("8")
-        print("Garbage Collector to clean Memory ++++++ in augmented_training.py")
-
-        gc.collect()
-        torch.cuda.empty_cache()
-
-        print("Trainer.train() ++++++ in augmented_training.py")
-        print("8")
-
-        trainer.train()
-
-        # trainer.state.log_history
-
-        # **********************************************************************************************************************#
-        # # Defining metrics
-        # **********************************************************************************************************************#
-
-        print("9")
-        print("Loss, F1 and Accuracy Scores ++++ In augmented_metrics.py")
+# Model prediction metrics on the test set
+preds_output = trainer.predict(text_encoded["test"])
+preds_output.metrics
 
 
-        train_loss = []
-        for elem in trainer.state.log_history:
-            if 'loss' in elem.keys():
-                train_loss.append(elem['loss'])
-
-        Macro_f1 = []
-        for elem in trainer.state.log_history:
-            if 'eval_f1' in elem.keys():
-                Macro_f1.append(elem['eval_f1'])
-
-        accuracy = []
-        for elem in trainer.state.log_history:
-            if 'eval_accuracy' in elem.keys():
-                accuracy.append(elem['eval_accuracy'])
-
-        val_loss = []
-        for elem in trainer.state.log_history:
-            if 'eval_loss' in elem.keys():
-                val_loss.append(elem['eval_loss'])
-
-        return train_loss, Macro_f1, accuracy, val_loss
-
-def synonym_augmented_training():
-
-    print()
-    print("")
-    print("synonym_augmented_training")
-    print("+++++++ In augmented_metrics.py +++++++")
-    print()
-
-    # Evaluate the synonym text augmentation
-    score_synonym = evaluate_aug(
-      aug_strategy = 'synonym',
-      n = 2,
-      train = train,
-      ds_val = ds_val,
-      ds_test = ds_test)
-    print(score_synonym)
+print("9")
+print("Loss, F1 and Accuracy Scores ++++ In augmented_metrics.py")
 
 
-    from functionality import augmented_load_model
-    augmented_load_model(output_dir)
-
-    from mcc_evaluation import augmented_mcc_evaluation
-    augmented_mcc_evaluation()
-
-    from data_visualization import augmented_mccPlot, augmented_confusion_matrix
-    augmented_mccPlot()
-    augmented_confusion_matrix()
-
-def contextual_embedding_augmented_training():
-
-    print()
-    print("")
-    print("contextual_embedding_augmented_training")
-    print("+++++++ In augmented_metrics.py +++++++")
-    print()
-
-    # # Evaluate the embedding text augmentation
-    # score_embedding = evaluate_aug(
-    #     aug_strategy='embedding',
-    #     n=2,
-    #     train=train,
-    #     ds_val=ds_val,
-    #     ds_test=ds_test)
-    # print(score_embedding)
+train_loss = []
+for elem in trainer.state.log_history:
+    if 'loss' in elem.keys():
+        train_loss.append(elem['loss'])
 
 
-    # from functionality import augmented_load_model
-    # augmented_load_model(output_dir)
-    #
-    # from mcc_evaluation import augmented_mcc_evaluation
-    # augmented_mcc_evaluation()
-    #
-    # from data_visualization import augmented_mccPlot, augmented_confusion_matrix
-    # augmented_mccPlot()
-    # augmented_confusion_matrix()
+Macro_f1 = []
+for elem in trainer.state.log_history:
+    if 'eval_f1' in elem.keys():
+        Macro_f1.append(elem['eval_f1'])
+
+accuracy = []
+for elem in trainer.state.log_history:
+    if 'eval_accuracy' in elem.keys():
+        accuracy.append(elem['eval_accuracy'])
+
+val_loss = []
+for elem in trainer.state.log_history:
+    if 'eval_loss' in elem.keys():
+        val_loss.append(elem['eval_loss'])

@@ -1,3 +1,6 @@
+import torch
+device = torch.device("cuda")
+
 def gpu_settings1():
 
     print()

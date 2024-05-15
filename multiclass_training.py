@@ -1,64 +1,54 @@
-print()
-print()
-print("|| +++In multiclass_training.py +++ Loaded in multiclass_two.py ||")
+from transformers import BertTokenizer, BertForSequenceClassification, Trainer, TrainerCallback, TrainingArguments
+#
+import torch
+from multiclass_data_prep import ds
+from multiclass_metrics import *
+from multiclass_load_data import ALL_LABELS, STRUCTURE_INDICES, CELF_SCORING_INDICES, TOLD_SCORING_INDICES
 
-#**********************************************************************************************************************#
-# # Define Training Parameters for the MultiClass-Models
-#**********************************************************************************************************************#
+# print("ds: ",type(ds))
+# print(ds)
 
-def training_parameters():          # 2
+y_preds = ""
 
-    print()
-    print("2")
-    print("Define Training Parameters +++++++ in multiclass_training.py")
+model = ""
 
+output_dir = ""
 
-    LEARNING_RATE = 2e-4
-    MAX_LENGTH = 44
-    BATCH_SIZE = 32
-    EPOCHS = 4
+id2label = {k: l for k, l in enumerate(ALL_LABELS)}
+label2id = {l: k for k, l in enumerate(ALL_LABELS)}
 
-    """
-    #New
-    LEARNING_RATE = 5e-5
-    MAX_LENGTH = 44
-    BATCH_SIZE = 32
-    EPOCHS = 20
-    """
+LEARNING_RATE = 2e-4
+MAX_LENGTH = 44
+BATCH_SIZE = 32
 
-    # Name the classes
-    id2label = {k: l for k, l in enumerate(ALL_LABELS)}
-    label2id = {l: k for k, l in enumerate(ALL_LABELS)}
+device = torch.device("cuda")
 
-    return (LEARNING_RATE, MAX_LENGTH,
-            BATCH_SIZE, EPOCHS,
-            label2id, id2label)
+PATH = "/content/drive/MyDrive/data/mBERT"
 
-    #Load BertForSequenceClassification, the pretrained BERT model with a single linear classification layer on top
+#PATH = "/Users/ph4533/Desktop/PyN4N/Py38/gn4n/mBERT"
 
+tokenizer = BertTokenizer.from_pretrained(PATH, do_lower_case=True)
+
+model = BertForSequenceClassification.from_pretrained(
+        PATH,  # Use the 12-layer BERT model, with an uncased vocab.
+        id2label=id2label,  # A dictionary linking label to id
+        label2id=label2id,  # A dictionary linking id to label
+        )
+
+num_train_epochs = input("Please choose number of Epochs: (We recommend 3-4)")
 #**********************************************************************************************************************#
 # # MODEL TRAINING DEPTH -  for layers training protocol
 #**********************************************************************************************************************#
 
 def multiclass_training_vanilla():          # 3
 
-    print()
-    print("3")
-    print("Define Model Parameters")
-    print('The MultiClassification Vanilla Model Was Chosen ++++ in multiclass_training.py')
+    global tokenizer, PATH, model, device
 
+    model.cuda() # Tell the model to run on GPU
 
-    global tokenizer
-    global PATH
+    print("model: ",type(model))
+    print(model)
 
-    # tokenizer = AutoTokenizer.from_pretrained(PATH)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        PATH,  # Use the 12-layer BERT model, with an uncased vocab.
-        id2label=id2label,  # A dictionary linking label to id
-        label2id=label2id,  # A dictionary linking id to label
-    )
-
-    model.cuda()                       # Tell the model to run on GPU
 
     return model
 
@@ -71,16 +61,7 @@ def multiclass_training_inherent():         # 3
     print('The MultiClassification Inherent Model was Chosen ++++ in multiclass_training.py')
     print()
 
-    global tokenizer
-    global PATH
-
-    # tokenizer = AutoTokenizer.from_pretrained(PATH)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        PATH,                           # Use the 12-layer BERT model, with an uncased vocab.
-        id2label=id2label,  # A dictionary linking label to id
-        label2id=label2id,  # A dictionary linking id to label
-    )
-
+    global tokenizer, PATH, model, device
     for name, param in model.named_parameters():
         if 'classifier' not in name: # classifier layer
             param.requires_grad = False
@@ -90,7 +71,7 @@ def multiclass_training_inherent():         # 3
     list(model.parameters())[5].requires_grad = True
     list(model.parameters())[-4].requires_grad = True
 
-    model.cuda()                       # Tell the model to run on GPU
+    model.cuda()                        # Tell the model to run on GPU
 
     return model
 
@@ -103,15 +84,7 @@ def multiclass_training_shallow():          # 3
     print('The MultiClassification Shallow Model was Chosen ++++ in multiclass_training.py')
 
 
-    global tokenizer
-    global PATH
-
-    # tokenizer = AutoTokenizer.from_pretrained(PATH)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        PATH,  # Use the 12-layer BERT model, with an uncased vocab.
-        id2label=id2label,  # A dictionary linking label to id
-        label2id=label2id,  # A dictionary linking id to label
-    )
+    global tokenizer, PATH, model, device
 
     for name, param in model.named_parameters():
         if 'classifier' not in name: # classifier layer
@@ -122,40 +95,25 @@ def multiclass_training_shallow():          # 3
     list(model.parameters())[53].requires_grad = True
     list(model.parameters())[-4].requires_grad = True
 
-    model.cuda()                       # Tell the model to run on GPU
+    model.cuda()                        # Tell the model to run on GPU
 
     return model
 
-#**********************************************************************************************************************#
-# # Optimizer
-#**********************************************************************************************************************#
 
 
 #**********************************************************************************************************************#
-# # Linear Scheduler (epochs, train_dataloader)
+# # MODEL TRAINING
 #**********************************************************************************************************************#
 
+class MultiTaskClassificationTrainer(Trainer):  # 10 in multiclass_training.py
 
-# #**********************************************************************************************************************#
-# # TRAINING    (epochs, data_loader, format_time, device)
-#**********************************************************************************************************************#
-
-class MultiTaskClassificationTrainer(Trainer):         # 10
-
-    print()
-    print("10")
-    print("Class MultiTaskClassificationTrainer(Trainer) ++++ In multiclass_training.py")
+    global model
 
     def __init__(self, group_weights=None, **kwargs):
         super().__init__(**kwargs)
         self.group_weights = group_weights
 
-    def compute_loss(self, model, inputs, return_outputs=False): # 11
-
-        print()
-        print("11")
-        print("Compute loss ++++ In multiclass_training.py ")
-        print()
+    def compute_loss(self, model, inputs, return_outputs=False):  # 11 in multiclass_training.py
 
 
         labels = inputs.pop("labels")
@@ -163,108 +121,94 @@ class MultiTaskClassificationTrainer(Trainer):         # 10
         logits = outputs[0]
 
         structure_loss = torch.nn.functional.cross_entropy(logits[:, STRUCTURE_INDICES],
-                                                           labels[:, STRUCTURE_INDICES].float())
-
+                                                            labels[:, STRUCTURE_INDICES].float())
         TOLD_loss = torch.nn.functional.binary_cross_entropy_with_logits(logits[:, TOLD_SCORING_INDICES],
-                                                                         labels[:, TOLD_SCORING_INDICES].float())
-
+                                                                          labels[:, TOLD_SCORING_INDICES].float())
         CELF_loss = torch.nn.functional.binary_cross_entropy_with_logits(logits[:, CELF_SCORING_INDICES],
-                                                                         labels[:, CELF_SCORING_INDICES].float())
+                                                                          labels[:, CELF_SCORING_INDICES].float())
 
-        loss = (self.group_weights[0] * structure_loss +
-                self.group_weights[2] * TOLD_loss +
-                self.group_weights[1] * CELF_loss)
-
+        loss = self.group_weights[0] * structure_loss + self.group_weights[2] * TOLD_loss + self.group_weights[
+            1] * CELF_loss
         return (loss, outputs) if return_outputs else loss
 
-class PrinterCallback(TrainerCallback):    # 12
 
-    def on_epoch_end(self, args, state, control, logs=None, **kwargs):   # 13
 
-        print("+++++++ In multiclass_training.py +++++++")
-        print("PrinterCallback_Step")
-
+class PrinterCallback(TrainerCallback):  # 12 in multiclass_training.py
+    def on_epoch_end(self, args, state, control, logs=None, **kwargs):  # 13 multiclass_training.py
         print(f"Epoch {state.epoch}: ")
 
 
+output_dir = input("Please enter the output directory: ")
 
-    def multiclass_set_training_args(self):       # 14
-        output_dir = input("Please enter the output directory: ")
 
-        training_args = TrainingArguments(
-            output_dir,
-            learning_rate=LEARNING_RATE,
-            per_device_train_batch_size=BATCH_SIZE,
-            per_device_eval_batch_size=BATCH_SIZE,
-            num_train_epochs=EPOCHS,
-            evaluation_strategy="epoch",
-            save_strategy="epoch",
-            save_total_limit=2,
-            metric_for_best_model="f1_macro",
-            load_best_model_at_end=True,
-            weight_decay=0.01,
-        )
+training_args = TrainingArguments(
+    output_dir=output_dir,
+    num_train_epochs=float(num_train_epochs),
+    learning_rate=LEARNING_RATE,
+    per_device_train_batch_size=BATCH_SIZE,
+    per_device_eval_batch_size=BATCH_SIZE,
+    evaluation_strategy="epoch",
+    save_strategy="epoch",
+    save_total_limit=2,
+    metric_for_best_model="f1_macro",
+    load_best_model_at_end=True,
+    weight_decay=0.01
+    )
 
-        trainer = MultiTaskClassificationTrainer(
-            model=model,
-            args=training_args,
-            train_dataset=ds["train"],
-            eval_dataset=ds["validation"],
-            compute_metrics=compute_metrics,
-            callbacks=[PrinterCallback],
-            group_weights=(0.7, 4, 4)
-        )
 
-        print()
-        print("15")
-        print("Trainer.train() ++++++ in multiclass_training.py")
-        print()
+trainer = MultiTaskClassificationTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=ds["train"],
+    eval_dataset=ds["validation"],
+    compute_metrics=compute_metrics,
+    callbacks=[PrinterCallback],
+    group_weights=(0.7, 4, 4)
+    )
 
-        trainer.train()     # 15
+trainer.train()
 
-        print()
-        print("16")
-        print("Trainer.evaluate() ++++++  in multiclass_training.py")
-        print()
+trainer.evaluate()
 
-        trainer.evaluate()      # 16
+Macro_f1_SENT = []
+for elem in trainer.state.log_history:
+    if 'eval_f1_macro_for_sentence_structure' in elem.keys():
+        Macro_f1_SENT.append(elem['eval_f1_macro_for_sentence_structure'])
 
-        preds_output = trainer.predict(text_encoded["val"])
-        preds_output.metrics
-        y_preds = np.argmax(preds_output.predictions, axis=1)
-        preds_output = trainer.predict(text_encoded["test"])
-        preds_output.metrics
+Macro_f1_CELF = []
+for elem in trainer.state.log_history:
+    if 'eval_f1_macro_for_CELF' in elem.keys():
+        Macro_f1_CELF.append(elem['eval_f1_macro_for_CELF'])
 
-        print()
-        print("16")
-        print("returning trainer, y_preds, preds_output, in multiclass_training.py")
-        print()
+Macro_f1_TOLD = []
+for elem in trainer.state.log_history:
+    if 'eval_f1_macro_for_TOLD' in elem.keys():
+        Macro_f1_TOLD.append(elem['eval_f1_macro_for_TOLD'])
 
-        return (trainer, y_preds, preds_output)    # 16
+
+eval_loss = []
+for elem in trainer.state.log_history:
+    if 'eval_loss' in elem.keys():
+        eval_loss.append(elem['eval_loss'])
+
+train_loss = []
+for elem in trainer.state.log_history:
+    if 'loss' in elem.keys():
+        train_loss.append(elem['loss'])
 
 #**********************************************************************************************************************#
-# # Training Summary
+# # Preds_output
 #**********************************************************************************************************************#
 
-def training_summary():
+preds_output = trainer.predict(ds["validation"])
 
-    print()
-    print("Training Summary ++++++  in multiclass_training.py!")
-    print(25)
-    #
-    # # Display floats with two decimal places.
-    # pd.set_option('display.precision', 2)
-    #
-    # # Create a DataFrame fom our training statistics.
-    # df_stats = pd.DataFrame(data=training_stats)
-    #
-    # # Use the 'epoch' as the row index.
-    # df_stats = df_stats.set_index('epoch')
-    #
-    # # A hack to force the column headers to wrap.
-    # # df = df.style.set_table_styles([dict(selector="th",props=[('max-width', '70px')])])
-    #
-    # # Display the table.
-    # df_stats
-    #
-    # return df_stats
+preds_output.metrics
+
+y_preds = np.argmax(preds_output.predictions, axis=1)
+
+preds_output = trainer.predict(ds["test"])
+
+preds_output.metrics
+
+
+

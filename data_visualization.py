@@ -1,11 +1,13 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+from mcc_evaluation import matthews_set, mcc
+
 
 print()
 print()
 print("+++++++In data_visualization.py+++++++")
-print()
-print()
+
+
 
 #**********************************************************************************************************************#
 # Build Histogram for Experiment 2
@@ -51,7 +53,7 @@ def plotSidebyside_english():
     # x8 = list(df[df['STRUCTURE'] == 'S_Cond.']['CELF_SCORING'])
     # x9 = list(df[df['STRUCTURE'] == 'S_Obj.Rel_CE']['CELF_SCORING'])
     #
-    # # Assign colors for each airline and the names
+    # # Assign colors for each sentence structure
     # colors = ['#E69F00', '#56B4E9', '#F0E442', '#009E73', '#D55E00', '#F0E562', '#D25F00', '#003E99', '#E23F11']
     # names = ['S_SVO+1_Aux', 'S_WH-quest.', 'S_Long_Pass.', 'S_Adjunct',
     #          'S_Obj.Rel_RB', 'S_SVO+2_Aux', 'S_Short_Pass.', 'S_Cond.',
@@ -89,7 +91,7 @@ def plotSidebyside_farsi():
     # x8 = list(df[df['STRUCTURE'] == 'Present_Progressive']['CELF_SCORING'])
     # x9 = list(df[df['STRUCTURE'] == 'Objective_Clitic']['CELF_SCORING'])
     #
-    # # Assign colors for each airline and the name
+    # # Assign colors for each sentence structure
     # colors = ['#E69F00', '#56B4E9', '#2F4F4F', '#009E73', '#FF6347', '#F0E562', '#FF0000', '#003E99', '#E44F00']
     # names = ['Posessive_Clitic', 'WH-quest.', 'Obj.Rel_RB', 'Obj.Rel_CE',
     #          'Complex_Ezafe', 'Cond.', 'Adjunct',
@@ -125,7 +127,7 @@ def plotSidebyside_greek():
     # x7 = list(df[df['STRUCTURE'] == 'S_WH-quest.']['CELF_SCORING'])
     # x8 = list(df[df['STRUCTURE'] == 'S_Rel_Clauses']['CELF_SCORING'])
     #
-    # # Assign colors for each airline and the name
+    # # Assign colors for each sentence structure
     # colors = ['#E69F00', '#56B4E9', '#2F4F4F', '#009E73', '#FF6347', '#F0E562', '#FF0000', '#003E99']
     # names = ['SVO', 'S_Negationn', 'S_CLLD_CD', 'S_Coord.', 'S_Comp_Clauses',
     #          'S_Adverbials', 'S_WH-quest.', 'S_Rel_Clauses']
@@ -150,6 +152,8 @@ def plotSidebyside_greek():
 
 def plotValidationAndLoss(user_input, depth_choice, experiment_choice):
 
+    from training import df_stats
+
     print()
     print("Plotting Validation and Loss +++++ in DataVisualization.py")
 
@@ -166,13 +170,14 @@ def plotValidationAndLoss(user_input, depth_choice, experiment_choice):
     plt.plot(df_stats['Valid. Loss'], 'g-o', label='Validation')
 
     # Label the plot
-    plt.title(experiment_choice, depth_choice, user_input, "Training & Validation Loss")
+    plt.title(f"{experiment_choice}, {depth_choice}, {user_input}, Training & Validation Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend()
     plt.xticks([1, 2, 3, 4, 5])
 
     plt.show()
+
 
     # print(experiment_choice, depth_choice, user_input, 'Training & Validation Loss')
 
@@ -185,6 +190,8 @@ def plotValidationAndLoss(user_input, depth_choice, experiment_choice):
 
 def plotMCC(user_input, depth_choice, experiment_choice):
 
+    from mcc_evaluation import matthews_set, mcc
+
     print()
     print("Binary or Multiclass - MCC Plot +++++ in data_visualization.py")
 
@@ -194,7 +201,7 @@ def plotMCC(user_input, depth_choice, experiment_choice):
     ax.hlines(mcc, *ax.get_xlim())
     ax.annotate(f'Total MCC:\n {mcc:.3f}', xy=(ax.get_xlim()[1], mcc))
 
-    plt.title(experiment_choice, depth_choice, user_input, 'MCC Score per Batch')
+    plt.title(f"{experiment_choice}, {depth_choice}, {user_input}, MCC Score per Batch")
     plt.ylabel('MCC Score (-1 to +1)')
     plt.xlabel('Batch #')
 
@@ -301,6 +308,8 @@ def multiclass_training_and_validation_plot(experiment_choice, depth_choice, use
 
 def augmented_mccPlot(experiment_choice, depth_choice, user_input):       # 18
 
+    global matthews_set, mcc
+
     print()
     print("augmented MCC +++++ in data_visualization.py")
 
@@ -315,7 +324,7 @@ def augmented_mccPlot(experiment_choice, depth_choice, user_input):       # 18
     ax.annotate(f'MCC:\n {mcc:.3f}', xy=(ax.get_xlim()[1], mcc))
 
 
-    plt.title(experiment_choice, depth_choice, user_input, "Model ++ MCC PLOT")
+    plt.title(f"{experiment_choice}, {depth_choice}, {user_input}, Model ++ MCC PLOT")
     plt.ylabel('MCC Score (-1 to +1)')
     plt.xlabel('Batch #')
     plt.show()
@@ -329,14 +338,16 @@ def augmented_mccPlot(experiment_choice, depth_choice, user_input):       # 18
 
 def augmented_training_and_validation_plot(experiment_choice, depth_choice, user_input):        # 12
 
+    from augmented_training import train_loss, Macro_f1, accuracy, val_loss, text_encoded
+    from augmented_metrics import y_preds, preds_output
+
     print()
     print("")
     print("augmented training and validation plot +++++ in data_visualization.py")
     print()
 
     import matplotlib.pyplot as plt
-    %matplotlib
-    inline
+    #matplotlib inline
 
     import seaborn as sns
     sns.set_context("paper")
@@ -355,7 +366,7 @@ def augmented_training_and_validation_plot(experiment_choice, depth_choice, user
     plt.plot(accuracy, 'b-+', label='Accuracy')
 
     # Label the plot
-    plt.title(experiment_choice, depth_choice, user_input, " Training & Validation Loss")
+    plt.title(f"{experiment_choice}, {depth_choice}, {user_input}, Training & Validation Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend()
@@ -370,6 +381,8 @@ def augmented_training_and_validation_plot(experiment_choice, depth_choice, user
 
 
 def augmented_confusion_matrix(experiment_choice, depth_choice, user_input):        # 13
+
+    global text_encoded
 
     print()
     print("augmented confusion matrix +++++ in data_visualization.py")
@@ -386,7 +399,7 @@ def augmented_confusion_matrix(experiment_choice, depth_choice, user_input):    
 
     plt.grid(False)
 
-    plt.title(experiment_choice, depth_choice, user_input, "Model ++ Confusion Matrix")
+    plt.title(f"{experiment_choice}, {depth_choice}, {user_input}, Model ++ Confusion Matrix")
 
     print(experiment_choice, depth_choice, user_input, "Model ++ Confusion Matrix")
 

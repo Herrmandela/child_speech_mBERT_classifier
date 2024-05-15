@@ -4,6 +4,10 @@
 print()
 print("12")
 print("Compute Metrics +++ In augmented_metrics.py")
+
+y_preds = []
+preds_output = []
+
 # Define a function to compute two metrics--accuracy and f1 score
 def compute_metrics(pred):
   # True labels
@@ -16,7 +20,10 @@ def compute_metrics(pred):
   # Note: Need to return a dictionary
   return {"accuracy": acc, "f1": f1}
 
+"""
 def preds_output(trainer):      # 12 for Augmented
+
+  global y_preds, preds_output
 
   preds_output = trainer.predict(text_encoded["val"])
 
@@ -27,3 +34,5 @@ def preds_output(trainer):      # 12 for Augmented
   # Model prediction metrics on the test set
   preds_output = trainer.predict(text_encoded["test"])
   preds_output.metrics
+
+  return y_preds, preds_output"""

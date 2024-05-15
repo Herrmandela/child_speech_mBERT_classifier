@@ -1,13 +1,26 @@
 from torch.utils.data import TensorDataset, random_split, DataLoader, RandomSampler, SequentialSampler
+from transformers import pipeline
 import numpy as np
-import time
+import os
 import datetime
+import torch
 
+model = ""
 
 batch_size = 32
 
-model = ""
-tokenizer = ""
+train_dataset = ""
+
+val_dataset = ""
+
+"""
+print("input_ids: ", input_ids)
+print()
+print("attention_masks: ", attention_masks)
+print()
+print("scores: ", scores)
+print()
+"""
 
 
 #**********************************************************************************************************************#
@@ -16,10 +29,11 @@ tokenizer = ""
 
 def trainingAndValidation():
 
+    from model_tokenizer import input_ids, attention_masks, scores
     print()
     print("training and validation in functionality.py")
 
-    global input_ids, attention_mask, scores
+    global train_dataset, val_dataset
 
     # Combine the training inputs into a TensorDataset.
     dataset = TensorDataset(input_ids, attention_masks, scores)
@@ -31,9 +45,11 @@ def trainingAndValidation():
     # Divide the dataset by randomly selecting samples.
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    #print('{:>5,} training samples'.format(train_size))
-    #print('{:>5,} validation samples'.format(val_size))
+    print('{:>5,} training samples'.format(train_size))
+    print('{:>5,} validation samples'.format(val_size))
 
+    print(len(train_dataset))
+    print(len(val_dataset))
     return train_dataset, val_dataset
 
 
@@ -42,7 +58,15 @@ def trainingAndValidation():
 # # Memory Iteration - Batch_Size
 #**********************************************************************************************************************#
 
-def saveMemory(batch_size):
+def saveMemory():
+
+
+    print("Entering Void of SM")
+
+    global train_dataset, val_dataset, validation_dataloader, train_dataloader
+
+    print(len(train_dataset))
+    print(len(val_dataset))
 
     print()
     print("Saving memory in functionality.py")
@@ -65,6 +89,8 @@ def saveMemory(batch_size):
         batch_size=batch_size  # evaluate with the set Batch size
     )
 
+    print("train_dataloader: ", train_dataloader)
+    #dataloader_length =  len(train_dataloader)
     return train_dataloader, validation_dataloader
 
 #**********************************************************************************************************************#
@@ -75,9 +101,6 @@ def saveMemory(batch_size):
 
 def flat_accuracy(preds, scores):   # 10
 
-    print()
-    print("FlatAcc in Functionality.py")
-
     pred_flat = np.argmax(preds, axis=1).flatten()
     scores_flat = scores.flatten()
     return np.sum(pred_flat == scores_flat)/ len(scores_flat)
@@ -87,11 +110,6 @@ def flat_accuracy(preds, scores):   # 10
 # # Elapsed Timer
 #**********************************************************************************************************************#
 def format_time(elapsed):            # 11
-
-    print()
-    print("format time in functionality.py")
-
-    # time in seconds is returned as a string hh:mm:ss
 
     # Round to the nearest second.
     elapsed_rounded = int(round((elapsed)))
@@ -106,12 +124,12 @@ def format_time(elapsed):            # 11
 
 def save_model():                   # 18
 
+    from training import model
+    from model_tokenizer import tokenizer
     print()
     print("Save Model in functionality.py")
 
     output_dir = input("Please enter the output directory: ")
-
-    #global output_dir
 
 
     # Create output directory if needed
@@ -123,25 +141,30 @@ def save_model():                   # 18
     # Save a trained model, configuration and tokenizer using `save_pretrained()`.
     # They can then be reloaded using `from_pretrained()`
     model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
+    print(type(model_to_save))
     model_to_save.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
 
     # Good practice: save your training arguments together with the trained model
-    torch.save(args, os.path.join(output_dir, 'training_args.bin'))
+    #torch.save(args, os.path.join(output_dir, 'training_args.bin'))
 
     return output_dir     #,tokenizer
-
-
 
 
 #**********************************************************************************************************************#
 # #  LOAD Model  and Tokenizer      (model, tokenizer, device)
 #**********************************************************************************************************************#
-# from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
 
 def load_model(output_dir):         # 19
 
+    from transformers import AutoModelForSequenceClassification, AutoTokenizer
+    from binary_one import device
+    from sample_sentences import input_texts
+
     print("output_dir is %s" % output_dir)
+
+    output_preds = []
 
 
     print()
@@ -153,15 +176,32 @@ def load_model(output_dir):         # 19
     # Load a trained model and vocabulary that you have fine-tuned
     model = AutoModelForSequenceClassification.from_pretrained(output_dir, num_labels=2, id2label=id2label)
 
-    model = model_class.from_pretrained(output_dir)
+    #model = model_class.from_pretrained(output_dir)
     tokenizer = AutoTokenizer.from_pretrained(output_dir)
 
     # Copy the model to the GPU.
-    model.to(device)
-    print(output_dir)
+    model.cuda()
 
-    return model, tokenizer
+    for text in input_texts:
+    # Encode the text
+      input = tokenizer(text, truncation=True, padding="max_length",
+                        max_length=44, return_tensors="pt").to("cuda")
+      with torch.no_grad():
+        # Call the model to predict under the format of logits of 15 classes
+        logits = model(**input).logits.cpu().detach().numpy()
 
+      predicted_class_id = logits.argmax().item()
+
+      prediction = model.config.id2label[predicted_class_id]
+
+      item = ('The sentence:',text, 'is', prediction)
+
+      output_preds.append(item)
+
+      for item in output_preds:
+        print(item)
+    #
+    return output_dir
 
 #**********************************************************************************************************************#
 # #  Multiclass save Model and Tokenizer
@@ -170,7 +210,7 @@ def load_model(output_dir):         # 19
 def multiclass_save_model():    # 22
 
     import os
-
+    from multiclass_training import model, tokenizer
     print()
     print("Multiclass save Model in functionality.py")
     print("20")
@@ -191,19 +231,24 @@ def multiclass_save_model():    # 22
     # Save a trained model, configuration and tokenizer using `save_pretrained()`.
     # They can then be reloaded using `from_pretrained()`
     model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
+    print(type(model_to_save))
     model_to_save.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
 
     # Good practice: save your training arguments together with the trained model
     # torch.save(args, os.path.join(output_dir, 'training_args.bin'))
+    return output_dir
 
 #**********************************************************************************************************************#
 # #  Multiclass Load model and Tokenizer
 #**********************************************************************************************************************#
 
 def multiclass_load_model(output_dir):          # 23
-#     from transformers import AutoModelForSequenceClassification, AutoTokenizer
+    from transformers import BertForSequenceClassification, BertTokenizer
 
+    from multiclass_training import model
+
+    device = torch.device("cuda")
     print("output_dir is %s" % output_dir)
 
     print()
@@ -214,15 +259,17 @@ def multiclass_load_model(output_dir):          # 23
     id2label = {0: "INCORRECT", 1: "CORRECT"}
 
     # Load a trained model and vocabulary that you have fine-tuned
-    model = AutoModelForSequenceClassification.from_pretrained(output_dir,
+    model = BertForSequenceClassification.from_pretrained(output_dir,
                                                                num_labels=2,
                                                                id2label=id2label)
 
-    model = model_class.from_pretrained(output_dir)
-    tokenizer = AutoTokenizer.from_pretrained(output_dir)
+    #model = model_class.from_pretrained(output_dir)
+    tokenizer = BertTokenizer.from_pretrained(output_dir)
 
     # Copy the model to the GPU.
-    model.to(device)
+    model.cuda()
+
+    return output_dir
 
 #**********************************************************************************************************************#
 # #  Augmented save Model and Tokenizer
@@ -235,6 +282,8 @@ def augmented_save_model():            # 14
     print("Augmented save Model in functionality.py")
     print("")
     print()
+
+    from augmented_training import model,tokenizer
 
 
     output_dir = input("Please enter the output directory for your model and tokinzer: ")
@@ -249,13 +298,15 @@ def augmented_save_model():            # 14
     model.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
 
-
+    return output_dir
 #**********************************************************************************************************************#
 # #  Augmented load model and Tokenizer
 #**********************************************************************************************************************#
 
 
 def augmented_load_model(output_dir):       # 15
+
+    #from augmented_training import model
 
     print()
     print("Augmented load Model in functionality.py")
@@ -268,6 +319,8 @@ def augmented_load_model(output_dir):       # 15
         "text-classification",
         model=os.path.join(output_dir),
         tokenizer=os.path.join(output_dir))
+
+    return output_dir
 
 #**********************************************************************************************************************#
 # #  Augmented test English

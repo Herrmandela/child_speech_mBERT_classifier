@@ -1,7 +1,7 @@
 #**********************************************************************************************************************#
 # #  MultiClass Model COMMAND
 #**********************************************************************************************************************#
-print()
+
 print()
 print("|| +++ multiclass_two.py - MultiClass Model COMMAND +++ Loaded ||")
 print()
@@ -13,27 +13,50 @@ print()
 
 from gpu_settings import *
 
-#device_name = gpu_settings1
-#gpu_settings1()
+device = gpu_settings1
+gpu_settings1()                             # number 4
 
-device = gpu_settings2
-gpu_settings2()
+import multiclass_imports
+
+#device = gpu_settings3
+#gpu_settings3()
 
 print(device)
-
-import multiclass_imports                               # X
+from augmented_load_data import All_text
 #**********************************************************************************************************************#
 # #  MultiClass Language Choice Menu
 #**********************************************************************************************************************#
 
-user_input = ""
+user_input = "english"
 
-depth_choice = ""
+depth_choice = "vanilla"
 
-experiment_choice = ""
+experiment_choice = "multiclass"
 
-from multiclass_load_data import *          # X
 
+from multiclass_load_data import *          # 1 this together with Label assignment
+
+
+multiclass_load_english()       #
+
+from multiclass_data_prep import *   #
+
+dataset_test_evaluation_english()       #
+
+import multiclass_metrics, multiclass_training, multiclass_datavis, sample_sentences
+
+multiclass_training.multiclass_training_vanilla()
+
+multiclass_datavis.multiclass_training_and_validation_plot(experiment_choice, depth_choice, user_input)
+
+sample_sentences.multiclass_sample_sentences()
+
+import mcc_data_prep
+#import mcc_evaluation
+
+multiclass_datavis.multiclass_plotMCC(experiment_choice, depth_choice, user_input)
+
+"""
 def choose_language():
     global user_input
 
@@ -61,7 +84,8 @@ def choose_language():
             print('Option not recognized')
 
 
-user_input = choose_language()                                      # X
+user_input = choose_language()
+
 
 if user_input == 'english':
     print('Processing...++++++ in multiclass_two.py')
@@ -95,15 +119,11 @@ elif user_input == 'exit':
 
 
 
-#**********************************************************************************************************************#
-# # Depth Choice and Training Parameters
-#**********************************************************************************************************************#
-from multiclass_data_prep import *                  # X
 
-from multiclass_metrics import *                    # X
+#from multiclass_data_prep import *
 
-
-#from multiclass_training import multiclass_training_vanilla, multiclass_training_inherent, multiclass_training_shallow        # X
+#multiclass_data_split()
+#multiclass_data_pandafication()
 
 #**********************************************************************************************************************#
 # # Language Choice for Dataset Evaluation # number 7
@@ -130,11 +150,11 @@ elif user_input == 'greek':
     print('You choose Greek')
     dataset_test_evaluation_greek()             # 7
 
-
+#from MCtrainer import *
 #**********************************************************************************************************************#
-# # Model Depth Choice
+# # Depth Choice and Training Parameters
 #**********************************************************************************************************************#
-
+import multiclass_metrics, multiclass_training, multiclass_datavis, sample_sentences
 def choose_model_depth():           # 3 in multiclass_training.py
     global depth_choice
 
@@ -160,52 +180,55 @@ def choose_model_depth():           # 3 in multiclass_training.py
             print()
             print('Option not recognized')
 
+print("ficeerts")
 depth_choice = choose_model_depth()
-import multiclass_training
+print("ficeerts2")
 
 if depth_choice == 'vanilla':
     print()
     print('Processing...++++++ in multiclass_two.py ')
     #time.sleep(4)
-    print('You chose the Vanilla Model, All LAYERS WILL UNDERGO TRAINING')
+    print("ficeerts3")
     multiclass_training.multiclass_training_vanilla()
+    print('You chose the Vanilla Model, All LAYERS WILL UNDERGO TRAINING')
+
 
 elif depth_choice == 'shallow':
     print()
     print('Processing...++++++ in multiclass_two.py')
     #time.sleep(4)
+    multiclass_training.multiclass_training_shallow()
     print('You chose the Shallow Model, ONLY THE INITIAL LAYERS WILL UNDERGO TRAINING')
-    multiclass_training_shallow()
+
 
 elif depth_choice == 'inherent':
     print()
     print('Processing...++++++ in multiclass_two.py')
     #time.sleep(4)
+    multiclass_training.multiclass_training_inherent()
     print('You chose the Inherent Model, NO LAYERS WILL UNDERGO TRAINING')
-    multiclass_training_inherent()
 
 
-import multiclass_datavis, sample_sentences
+print("!!!!!!!!!!!!!loading MCtrainer training_parameters!!!!!!!!!!!!!!!!!!!")
 
-#**********************************************************************************************************************#
-# #
-#**********************************************************************************************************************#
 
-#multiclass_datavis.multiclass_confusion_matrix(experiment_choice, depth_choice, user_input)              # 17
-multiclass_datavis.multiclass_training_and_validation_plot(experiment_choice, depth_choice, user_input)  # 18
 
-sample_sentences.multiclass_sample_sentences(experiment_choice, depth_choice, user_input)
+multiclass_datavis.multiclass_training_and_validation_plot(experiment_choice, depth_choice, user_input)
+
+sample_sentences.multiclass_sample_sentences()
 
 import mcc_data_prep
 #import mcc_evaluation
 
 multiclass_datavis.multiclass_plotMCC(experiment_choice, depth_choice, user_input)
 
+"""
 
-from functionality import multiclass_save_model, multiclass_load_model
 
-output_dir = multiclass_save_model()                            # 22
 
-multiclass_load_model(output_dir)                               # 23
+
+
+
+
 
 

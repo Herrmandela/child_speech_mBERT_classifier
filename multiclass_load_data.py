@@ -1,49 +1,50 @@
-# import pandas as pd
+import pandas as pd
 print()
 print()
 print("|| +++ multiclass_load_data.py +++ loaded ||")
 
 #**********************************************************************************************************************#
-# Defining the PATH, tokenizer, responses and scores.
+# Define responses, scores, dataframes
 #**********************************************************************************************************************#
 
-df = " "
-# responses = " "
-# scores = " "
+responses = []
 
-PATH = "/Users/ph4533/Desktop/PyN4N/gitN4N/mBERT"
-tokenizer = AutoTokenizer.from_pretrained(PATH)
+scores = []
 
+df = []
+
+ALL_LABELS = []
+
+STRUCTURE_INDICES = []
+LABEL_REPOSITORY = []
+CELF_SCORING_INDICES = []
+TOLD_SCORING_INDICES = []
 
 #**********************************************************************************************************************#
 # Load - English- *****
 #**********************************************************************************************************************#
 
 def multiclass_load_english():      # 1
-# Load the dataset into a pandas dataframe.
 
-    print()
+    global responses, scores, df, ALL_LABELS, STRUCTURE_INDICES, LABEL_REPOSITORY, CELF_SCORING_INDICES, TOLD_SCORING_INDICES
+
     print("1")
     print("Loading English ++++++ in multiclass_load_data.py")
 
-    df = pd.read_csv("/Users/ph4533/Desktop/PyN4N/gitN4N/datasets/ErrorTypesANON/New_3_SRep_all_data_withErrorTypesANON.csv",
+    df = pd.read_csv("/content/drive/MyDrive/data/english/englishData.csv",
                      on_bad_lines='skip',
-                     encoding='ISO-8859-1')
+                     encoding='ISO-8859-1'
+                     )
 
-# #    df.loc[df.TOLD_SCORING ==0].sample(5)[['STRUCTURE','TARGET','RESPONSE','CELF_SCORING','TOLD_SCORING']]
-#
+
+    #df.loc[df.TOLD_SCORING ==0].sample(5)[['STRUCTURE','TARGET','RESPONSE','CELF_SCORING','TOLD_SCORING']]
+
+    print('Number of test sentences: {:,}\n'.format(df.shape[0]))
+
+    df['CELF_SCORING'] = df['CELF_SCORING'].replace([3, 1, 2, 0],[0, 1, 2, 3])
 
     responses = df.RESPONSE.values
-    scores = df.TOLD_SCORING.values
-
-
-#**********************************************************************************************************************#
-# Defining and Loading English Labels - *****
-#**********************************************************************************************************************#
-
-    print()
-    print("2")
-    print("English ** Define Label Repository ++++++ in multiclass_load_data.py")
+    scores = df.CELF_SCORING.values
 
     LABEL_REPOSITORY = {
         "S_SVO+1_Aux": "SVO with ONE auxiliary/modal",
@@ -75,9 +76,9 @@ def multiclass_load_english():      # 1
 
     ALL_LABELS = STRUCTURE_LABELS + CELF_SCORING_LABELS + TOLD_SCORING_LABELS
 
-    return (df, ALL_LABELS, STRUCTURE_INDICES,
-            LABEL_REPOSITORY, CELF_SCORING_INDICES,
-            TOLD_SCORING_INDICES, responses, scores)
+
+    return df, ALL_LABELS, STRUCTURE_INDICES,LABEL_REPOSITORY, CELF_SCORING_INDICES,TOLD_SCORING_INDICES, responses, scores
+
 
 #**********************************************************************************************************************#
 # Load - FARSI - *****
@@ -85,32 +86,22 @@ def multiclass_load_english():      # 1
 
 def multiclass_load_farsi():           # 1
 
-    print()
+    global responses, scores, df, ALL_LABELS, STRUCTURE_INDICES, LABEL_REPOSITORY, CELF_SCORING_INDICES, TOLD_SCORING_INDICES
+
     print("1")
     print("Loading Farsi ++++++ in multiclass_load_data.py")
 
-    df = pd.read_csv("/Users/ph4533/Desktop/PyN4N/gitN4N/datasets/Farsi/FarsiMLC.xls",
+    df = pd.read_excel("/content/drive/MyDrive/data/farsi/farsiMLC.xls",
                      on_bad_lines='skip')
-
-    # df = df.drop(['ChildID', 'Sentence Type ', 'Test Number', 'Actual Response',
-    #      'Notes', 'Auto Scoring', 'Syntactic Structure Score', 'Lexical Errors',
-    #      'Word order errors ','Comments '],axis=1)
-
-    df = df.rename(columns={"TOLD-scoring": "TOLD_SCORING", "Scored Response": "RESPONSE", "Target": "TARGET"})
 
     df.dropna()
 
+    print('Number of test sentences: {:,}\n'.format(df.shape[0]))
+
+    df['CELF_SCORING'] = df['CELF_SCORING'].replace([3, 1, 2, 0],[0, 1, 2, 3])
+
     responses = df.RESPONSE.values
-    scores = df.TOLD_SCORING.values
-
-# **********************************************************************************************************************#
-# Defining and Loading Farsi Labels - *****
-# **********************************************************************************************************************#
-
-    print()
-    print("2")
-    print("Farsi ** Define Label Repository ++++++ in multiclass_load_data.py")
-    # print()
+    scores = df.CELF_SCORING.values
 
     LABEL_REPOSITORY = {
         "S_Posessive_Clitic": "Posessive_Clitic",
@@ -142,36 +133,27 @@ def multiclass_load_farsi():           # 1
 
     ALL_LABELS = STRUCTURE_LABELS + CELF_SCORING_LABELS + TOLD_SCORING_LABELS
 
-    return (df, ALL_LABELS, STRUCTURE_INDICES,
-            LABEL_REPOSITORY, CELF_SCORING_INDICES,
-            TOLD_SCORING_INDICES, responses, scores)
+    return df, ALL_LABELS, STRUCTURE_INDICES,LABEL_REPOSITORY, CELF_SCORING_INDICES,TOLD_SCORING_INDICES, responses, scores
 
 #**********************************************************************************************************************#
 # Load - GREEK - *****
 #**********************************************************************************************************************#
 def multiclass_load_greek():        # 1
 
-    print()
+    global responses, scores, df, ALL_LABELS, STRUCTURE_INDICES, LABEL_REPOSITORY, CELF_SCORING_INDICES, TOLD_SCORING_INDICES
+
     print("1")
     print("Loading Greek ++++++ in multiclass_load_data.py")
 
-    df = pd.read_csv("/Users/ph4533/Desktop/PyN4N/gitN4N/datasets/Greek/SRT_GreekANON.csv",
+    df = pd.read_csv("/content/drive/MyDrive/data/greek/greekData.csv",
                      on_bad_lines='skip')
 
-#    df.loc[df.TOLD_SCORING == 0].sample(5)[['STRUCTURE', 'RESPONSE', 'CELF_SCORING', 'TOLD_SCORING']]
+    print('Number of test sentences: {:,}\n'.format(df.shape[0]))
+
+    df['CELF_SCORING'] = df['CELF_SCORING'].replace([3, 1, 2, 0],[0, 1, 2, 3])
 
     responses = df.RESPONSE.values
-    scores = df.TOLD_SCORING.values
-
-
-# **********************************************************************************************************************#
-# Defining and Loading Greek Labels - *****
-# **********************************************************************************************************************#
-
-    print()
-    print("2")
-    print("Greek ** Define Label Repository ++++++ in multiclass_load_data.py")
-    print()
+    scores = df.CELF_SCORING.values
 
     LABEL_REPOSITORY = {
         "SVO" : "SVO",
@@ -201,20 +183,20 @@ def multiclass_load_greek():        # 1
 
     ALL_LABELS = STRUCTURE_LABELS + CELF_SCORING_LABELS + TOLD_SCORING_LABELS
 
-    return (df, ALL_LABELS, STRUCTURE_INDICES,
-            LABEL_REPOSITORY, CELF_SCORING_INDICES,
-            TOLD_SCORING_INDICES, responses, scores)
+    return df, ALL_LABELS, STRUCTURE_INDICES,LABEL_REPOSITORY, CELF_SCORING_INDICES,TOLD_SCORING_INDICES, responses, scores
 
 #**********************************************************************************************************************#
 # Load - Multilingual - *****
 #**********************************************************************************************************************#
 def multiclass_load_all():      # 1
 
+    global responses, scores, df, ALL_LABELS, STRUCTURE_INDICES, LABEL_REPOSITORY, CELF_SCORING_INDICES, TOLD_SCORING_INDICES
+
     print()
     print("1")
     print("Loading Melange ++++++ in multiclass_load_data.py")
 
-    df = pd.read_csv("/Users/ph4533/Desktop/PyN4N/gitN4N/datasets/ErrorTypesANON/AllDataCELF.csv",
+    df = pd.read_csv("/content/drive/MyDrive/data/multilingual/allData.csv",
                      keep_default_na=False,
                      sep = ";")
 
@@ -242,6 +224,6 @@ def multiclass_load_all():      # 1
 
     ALL_LABELS = TOLD_SCORING_LABELS
 
-    return (df, ALL_LABELS, STRUCTURE_INDICES,
-            LABEL_REPOSITORY, CELF_SCORING_INDICES,
-            TOLD_SCORING_INDICES, responses, scores)
+    return df, ALL_LABELS, STRUCTURE_INDICES,LABEL_REPOSITORY, CELF_SCORING_INDICES,TOLD_SCORING_INDICES, responses, scores
+
+print("|| multiclass Load English ||")

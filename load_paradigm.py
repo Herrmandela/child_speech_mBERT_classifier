@@ -19,8 +19,8 @@ def load_multiclass():
     print("+++++++In load_paradigm.py+++++++")
     print("Loading Multiclass Experiment...")
 
-    import multiclass_two           # <-  step 2
-
+    #import multiclass           # <-  step 2
+    import multiclass_two
 
 
 def load_augmented():

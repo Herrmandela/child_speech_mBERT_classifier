@@ -15,6 +15,30 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.metrics import classification_report
 from multiclass_load_data import ALL_LABELS, STRUCTURE_INDICES, LABEL_REPOSITORY, CELF_SCORING_INDICES, TOLD_SCORING_INDICES
 
+
+input_texts = [
+               "Who have they seen near the steps?",
+               "He should wash the baby that the child is patting.",
+               "What did they find yesterday in the snow?",
+               "The books...",
+               "The children will if they sleep.",
+               "They are eating the bananas in the dark.",
+               "οι οδηγοί άφησαν τους επιβάτες των λεωφορείων στην επόμενη στάση",
+               "ο χορευτής πήρε την ομπρέλα του και περπάτησε στη δυνατή βροχή",
+               "ο προπονητής δεν να κερδίσει η ομάδα του σήμερα",
+               "η γιαγιά ότι σε αυτά τα μέρη πετούσαν περίεργα πουλιά",
+               "dɔxtær-i kɛ tɔ dust dɑri xɑhærɛ mænɛ",
+               "kudum kɛtɑb rɔ ɛntɛxɑb kærd?",
+               "væqti lɛbæs pushidam mikhoram",
+               "kahli",
+               "Es war eine lange dunkle Nacht.",
+               "È stata una lunga notte buia",
+               "یہ ایک لمبی سیاہ رات تھی",
+               "C'était une longue nuit sombre",
+               "لقد كانت ليلة مظلمة طويلة",
+               "أحب المدرسة"
+               ]
+               
 def get_preds_from_logits(logits):    # 8
 
     print("9")
