@@ -1,3 +1,19 @@
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, f1_score
+import pandas as pd
+from datasets import Dataset,load_metric, DatasetDict
+from transformers import AutoTokenizer
+
+from augmented_load_data import df, All_text
+
+# Set the model path
+PATH = "/content/drive/MyDrive/data/LBERT"
+
+# Define the tokenizer
+tokenizer = AutoTokenizer.from_pretrained(PATH)
+
+sentences = []
+
 print()
 print()
 print("|| +++ In augmented_data_prep.py +++ Loaded ||")
@@ -22,9 +38,9 @@ train.shape, val.shape, test.shape
 
 #************
 
-train_ds = pd.read_csv("/Users/ph4533/Desktop/PyN4N/Py38/gn4n/dfTrain.csv").astype(str)
-val_ds = pd.read_csv("/Users/ph4533/Desktop/PyN4N/Py38/gn4n/dfVal.csv").astype(str)
-test_ds = pd.read_csv("/Users/ph4533/Desktop/PyN4N/Py38/gn4n/dfTest.csv").astype(str)
+train_ds = pd.read_csv("/content/dfTrain.csv").astype(str)
+val_ds = pd.read_csv("/content/dfVal.csv").astype(str)
+test_ds = pd.read_csv("/content/dfTest.csv").astype(str)
 
 print("val_ds : ", type(val_ds))
 #************
@@ -62,13 +78,13 @@ def compute_metrics(pred):
   return {"accuracy": acc, "f1": f1}
 
 def tokenize(batch):            # 4
-
-    global PATH, tokenizer
+    
+    global PATH, tokenizer 
 
     return tokenizer(
         batch["text"],
         # Pad the examples with zeros to the size of the longest one in a batch
-        padding = True,
+        padding = True, 
         # Truncate the examples to the model’s maximum context size (which is 512 for this model)
         truncation = True)
 
