@@ -18,7 +18,7 @@ through downstream classification tasks.
 
 #### *Greek*
 
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Datasets.png" align="left" height="48" width="48" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Datasets.png" align="left" height="480" ></a>
 
 ## <ins>Model Paradigms</ins>
 
