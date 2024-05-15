@@ -1,4 +1,4 @@
-# <ins>Child Speech  Classifier</ins>
+# Child Speech  Classifier
 
 - Automatic child speech classification system based on a multilingual Large Language Model (LLMs)
 
@@ -10,7 +10,7 @@ through downstream classification tasks.
 
 
 
-## <ins>Datasets</ins>
+## Datasets
 
 #### *English*
 
@@ -73,7 +73,7 @@ to the training data forming cohesive hybrid dataset.
 
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/augFigure.png" width="500" ></a>
 
-## <ins>Model Depth</ins>
+## Model Depth
 
 
 ### *Vanilla*
@@ -91,7 +91,7 @@ All Layers Frozen Except for Input and Output Layers
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/layerFreeze.png" width="500" ></a>
 
 
-## <ins>Metrics</ins>
+## Metrics
 
 ### *Sample Sentence*
 
