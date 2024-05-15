@@ -18,7 +18,7 @@ through downstream classification tasks.
 
 #### *Greek*
 
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Datasets.png" align="left" height="480" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Datasets.png" align="left" height="230" ></a>
 
 ## <ins>Model Paradigms</ins>
 
@@ -71,7 +71,7 @@ inappropriate synonym insertion and word omission.
 After the production of the synthetic data, it is automatically incorporated 
 to the training data forming cohesive hybrid dataset.
 
-![alt text](https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/augFigure.png?raw=true)
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/augFigure.png" align="left" height="230" ></a>
 
 ## <ins>Model Depth</ins>
 
@@ -88,12 +88,12 @@ Shallow Layers Frozen + Output Layer
 
 All Layers Frozen Except for Input and Output Layers 
 
-![alt text](https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/layerFreeze.png?raw=true)
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/layerFreeze.png" align="left" height="230" ></a>
 
 
 ## <ins>Metrics</ins>
 
 ### *Sample Sentence*
 
-![alt text](https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/sampleSents.png?raw=true)
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/sampleSents.png" align="left" height="230" ></a>
 
