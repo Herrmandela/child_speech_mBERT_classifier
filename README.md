@@ -17,7 +17,7 @@ through downstream classification tasks.
 #### *Farsi*
 
 #### *Greek*
-![alt text](https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Dataset.jpg?raw=true)
+![alt text](https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Dataset.png?raw=true)
 
 ## <ins>Model Paradigms</ins>
 
@@ -70,6 +70,8 @@ inappropriate synonym insertion and word omission.
 After the production of the synthetic data, it is automatically incorporated 
 to the training data forming cohesive hybrid dataset.
 
+![alt text](https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/augFigure.png?raw=true)
+
 ## <ins>Model Depth</ins>
 
 
@@ -85,4 +87,12 @@ Shallow Layers Frozen + Output Layer
 
 All Layers Frozen Except for Input and Output Layers 
 
+![alt text](https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/layerFreeze.png?raw=true)
+
+
+## <ins>Metrics</ins>
+
+### *Sample Sentence*
+
+![alt text](https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/sampleSents.png?raw=true)
 
