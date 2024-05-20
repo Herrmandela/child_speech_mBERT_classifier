@@ -1,4 +1,6 @@
-# import pandas as pd
+import pandas as pd
+from transformers import BertTokenizer
+
 print()
 print()
 print("|| +++ augmented_load_data.py +++ loaded ||")
@@ -23,7 +25,7 @@ def augmented_load_english():
     print("1")
     print("Loading English ++++++ in augmented_load_data.py")
 
-    df = pd.read_csv("/content/drive/MyDrive/data/English/englishData.csv",
+    df = pd.read_csv("/englishData.csv",
                      on_bad_lines='skip',
                      encoding='ISO-8859-1')
 
@@ -59,7 +61,7 @@ def augmented_load_farsi():           # 1
     print("Loading Farsi ++++++ in augmented_load_data.py")
 
 
-    df = pd.read_excel("/content/drive/MyDrive/data/Farsi/farsiMLC.xls")
+    df = pd.read_excel("/farsiMLC.xls")
 
 
     df = df.rename(columns = {"CELF_SCORING": "label", "RESPONSE": "text"})
@@ -91,7 +93,7 @@ def augmented_load_greek():         # 1
     print("Loading Greek ++++++ in augmented_load_data.py")
     print()
 
-    df = pd.read_csv("/content/drive/MyDrive/data/Greek/greekData.csv",
+    df = pd.read_csv("/greekData.csv",
                      on_bad_lines='skip',
                      sep = ",")
 
@@ -122,7 +124,7 @@ def augmented_load_all():           # 1
     print()
 
 
-    df = pd.read_csv("/content/drive/MyDrive/data/Multilingual/allDataCELF.csv",
+    df = pd.read_csv("/allDataCELF.csv",
                      keep_default_na=False,
                      sep = ";")
 
@@ -150,7 +152,7 @@ def augmented_load_validation():
 
     print("creating Special Validation Set ++++++ in augmented_validation.py")
 
-    All_text = pd.read_csv("/content/drive/MyDrive/data/Multilingual/allDataCELF.csv",
+    All_text = pd.read_csv("/allDataCELF.csv",
                           keep_default_na=False,
                           sep = ";")
 

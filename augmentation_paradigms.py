@@ -2,43 +2,63 @@
 # # Initializing Augmentation Strategies
 #**********************************************************************************************************************#
 
-def synonym_augmentation():         # 19
+import nlpaug.augmenter.word as naw
+import nlpaug.flow as nafc
+from nlpaug.util import Action
+import pandas as pd
+import pyarrow as pa
+from datasets import Dataset, load_metric, DatasetDict
+from transformers import AutoTokenizer, BertTokenizer, Trainer
+import gc
+import torch
+#from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
 
-    print()
-    print('Synonym augmentation ++++ n augmented_paradigms.py')
+from augmented_data_prep import train, ds_val, ds_test
 
-    aug_syn = naw.SynonymAug(
-        aug_src='wordnet',
-        aug_max=3)
+# Set the model path
+PATH = "Path of pretrained mBERT model"
+
+# Define the tokenizer
+#tokenizer = AutoTokenizer.from_pretrained(PATH)
+
+tokenizer = BertTokenizer.from_pretrained(PATH)
+
+aug_syn = naw.SynonymAug(
+    aug_src='wordnet',
+    aug_max=3)
 
 
-# aug_emb = naw.ContextualWordEmbsAug(
-#   # Other models include 'distilbert-base-uncased', 'roberta-base', etc.
-#   model_path=PATH,
-#   # You can also choose "insert"
-#   action="substitute",
-#   # Use GPU
+aug_emb = naw.ContextualWordEmbsAug(
+  # Other models include 'distilbert-base-uncased', 'roberta-base', etc.
+  model_path=PATH,
+  # You can also choose "insert"
+  action="substitute",
+  # Use GPU
+  device='msp')
 #   device='cuda')
 
 #**********************************************************************************************************************#
 # # BACKTRANSLATION
 #**********************************************************************************************************************#
 
-# aug_bt = naw.BackTranslationAug(
-#   # Translate English to Greek
-#   from_model_name = "Helsinki-NLP/opus-mt-grk-en",
-#   # Translate from Greek back to English
-#   to_model_name = "Helsinki-NLP/opus-mt-en-grk",
-#   # Use GPU
-#   device = 'cuda')
+aug_bt = naw.BackTranslationAug(
+  # Translate English to Greek
+  from_model_name = "Helsinki-NLP/opus-mt-grk-en",
+  # Translate from Greek back to English
+  to_model_name = "Helsinki-NLP/opus-mt-en-grk",
+    # Use GPU
+  device='msp')
+#   device='cuda')
 
 
 # **********************************************************************************************************************#
 # # Synonym Evaluation
 # **********************************************************************************************************************#
 
-
 def synonym_evaluation_score():
+
+    global train, ds_val, ds_test
+
     # Evaluate the synonym text augmentation
     score_synonym = evaluate_aug(aug_strategy='synonym',
                                  n=1,
@@ -55,6 +75,9 @@ def synonym_evaluation_score():
 
 
 def contextual_evaluation_score():
+
+    from augmented_data_prep import train, ds_val, ds_test
+
     # Evaluate the embedding text augmentation
     score_embedding = evaluate_aug(aug_strategy='embedding',
                                    n=2,
@@ -62,8 +85,8 @@ def contextual_evaluation_score():
                                    ds_val=ds_val,
                                    ds_test=ds_test)
 
-    # print(score_embedding)
-    # return score_embedding
+    print(score_embedding)
+    return score_embedding
 
 # **********************************************************************************************************************#
 # # BACKTRANSLATION Evaluation
@@ -71,6 +94,9 @@ def contextual_evaluation_score():
 
 
 def backtranslation_evaluation_score():
+
+    from augmented_data_prep import train, ds_val, ds_test
+
     # Evaluate the back translation text augmentation
     score_backTransLation = evaluate_aug(aug_strategy='backtranslation',
                                          n=1,
@@ -78,8 +104,8 @@ def backtranslation_evaluation_score():
                                          ds_val=ds_val,
                                          ds_test=ds_test)
 
-    # print(score_backTransLation)
-    # return score_backTransLation
+    print(score_backTransLation)
+    return score_backTransLation
 
 #**********************************************************************************************************************#
 # # Evaluation of Augmentation Strategies
@@ -90,14 +116,8 @@ def backtranslation_evaluation_score():
 
 def evaluate_aug(aug_strategy, n, train, ds_val, ds_test):
 
-    print()
-    print("")
-    print("Define Evaluation Strategy for Augmentation")
-    print("+++++++ In augmented_paradigms.py +++++++")
-    print('Evaluation Strategy for Augmentation in augmented_paradigms.py')
-    print()
-
-    global output_dir
+    from augmented_data_prep import tokenize, compute_metrics, text_encoded
+    from augmented_training import model, training_args
 
     # Create two lists to store the augmented sentences and their corresponding labels
     augmented_text = []
@@ -126,15 +146,19 @@ def evaluate_aug(aug_strategy, n, train, ds_val, ds_test):
     # Vertically concat the train set with the augmented texts
     train_augmented = pd.concat([train, ds_augmented_text_labels], axis = 0)
 
+    print("train_augmented : ", type(train_augmented))
+
     # Convert the DataFrame to a Dataset (Aparche Arrow format)
     dset_train_augmented = Dataset.from_pandas(train_augmented)
+
+    print("dset_train_augmented : ", type(dset_train_augmented))
 
     # Gather train, val, and test Datasets to have a single DatasetDict,
     # which can be manipulated together
     text_augmented = DatasetDict({
-        'train': dset_train_augmented,
-        'val': ds_val,
-        'test': ds_test})
+      'train': dset_train_augmented,
+      'val': ds_val,
+      'test': ds_test})
     text_augmented = text_augmented.remove_columns(["__index_level_0__"])
 
     # Tokenize the sentences dataset
@@ -197,6 +221,7 @@ def evaluate_aug(aug_strategy, n, train, ds_val, ds_test):
     preds_output = trainer.predict(text_encoded["test"])
     print(preds_output.metrics)
 
+    # Import predefined output_dir
     model.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
 

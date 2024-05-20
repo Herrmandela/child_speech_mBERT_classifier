@@ -17,7 +17,6 @@ matthews_set = []
 def binary_mcc_evaluation():    # 16 in mcc_evaluation.py
                                     # 20 for multiclass Models
 
-
     from binary_load_data import df
     from training import model
     import torch

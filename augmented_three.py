@@ -4,7 +4,7 @@
 
 print()
 print()
-print("|| +++In augmented_three.py - AUGMENTED Model COMMAND +++ Loaded ||")
+print("|| +++ AUGMENTED Model COMMAND +++ Loaded ||")
 print()
 print()
 
@@ -22,6 +22,7 @@ gpu_settings2()
 import augmented_imports
 from menus import experiment_choice
 
+
 user_input = ""
 
 depth_choice = ""
@@ -30,13 +31,12 @@ aug_or_ex = ""
 
 augmentation_choice = ""
 
-
 # **********************************************************************************************************************#
 #   Language Choice Menu
 # **********************************************************************************************************************#              # 1
-from augmented_load_data import *                     # X
+from augmented_load_data import *
 
-def choose_language():                                # 1
+def choose_language():
     global user_input
 
     menu_options = ('english', 'farsi', 'greek', 'multilingual', 'exit')
@@ -97,7 +97,7 @@ elif user_input == 'exit':
 # # Depth Choice and Training Parameters
 #**********************************************************************************************************************#
 import augmented_data_prep
-                                        # 4                                #                                # 6
+                                                                 #                                # 6
 def choose_model_depth():
 
     layer_options = ('vanilla', 'shallow', 'inherent')

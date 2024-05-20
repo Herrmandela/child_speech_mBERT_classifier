@@ -19,7 +19,7 @@ def load_multiclass():
     print("+++++++In load_paradigm.py+++++++")
     print("Loading Multiclass Experiment...")
 
-    #import multiclass           # <-  step 2
+    #import multiclass
     import multiclass_two
 
 

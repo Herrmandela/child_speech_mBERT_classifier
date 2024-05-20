@@ -8,9 +8,7 @@ print("Binary +++ model_tokenizer.py")
 print()
 
 # # Define PATH
-#PATH = "/Users/ph4533/Desktop/PyN4N/gitN4N/mBERT"
-
-PATH = "/content/drive/MyDrive/data/mBERT"
+PATH = "/data/mBERT"
 
 
 #**********************************************************************************************************************#

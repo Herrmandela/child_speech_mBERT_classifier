@@ -1,6 +1,21 @@
-print()
-print()
-print("|| +++ In augmented_data_prep.py +++ Loaded ||")
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, f1_score
+import pandas as pd
+from transformers import  AutoTokenizer, BertTokenizer
+from datasets import Dataset, DatasetDict
+
+from augmented_load_data import df, All_text
+
+# Set the model path
+
+PATH = "Path of mBERT model - download Transformer from HuggingFace"
+
+# Define the tokenizer
+#tokenizer = AutoTokenizer.from_pretrained(PATH, do_lower_case=True)
+
+tokenizer = BertTokenizer.from_pretrained(PATH, do_lower_case=True)
+
+sentences = []
 
 # **********************************************************************************************************************#
 # SPLIT MULTICLASS DATA INTO TRAINING, VALIDATION AND TESTING DATA - *****
@@ -22,19 +37,19 @@ train.shape, val.shape, test.shape
 
 #************
 
-train_ds = pd.read_csv("/Users/ph4533/Desktop/PyN4N/Py38/gn4n/dfTrain.csv").astype(str)
-val_ds = pd.read_csv("/Users/ph4533/Desktop/PyN4N/Py38/gn4n/dfVal.csv").astype(str)
-test_ds = pd.read_csv("/Users/ph4533/Desktop/PyN4N/Py38/gn4n/dfTest.csv").astype(str)
+train_ds = pd.read_csv("/dfTrain.csv").astype(str)
+val_ds = pd.read_csv("/dfVal.csv").astype(str)
+test_ds = pd.read_csv("/dfTest.csv").astype(str)
 
 print("val_ds : ", type(val_ds))
-#************
+# ************
 
 ds_train = Dataset.from_pandas(train)
 ds_val = Dataset.from_pandas(val)
 ds_test = Dataset.from_pandas(test)
 
 print("ds_val : ", type(ds_val))
-#************
+# ************
 
 # Gather train, val, and test Datasets to have a single DatasetDict, and make it manipulatable
 sentences = DatasetDict({
@@ -46,20 +61,20 @@ sentences = DatasetDict({
 sentences = sentences.remove_columns(["__index_level_0__"])
 
 
-#**********************************************************************************************************************#
+# **********************************************************************************************************************#
 # # Define Tokenization Process for the Augmented-Models
-#**********************************************************************************************************************#
+# **********************************************************************************************************************#
 # Define a function to compute two metrics--accuracy and f1 score
 def compute_metrics(pred):
-  # True labels
-  labels = pred.label_ids
+    # True labels
+    labels = pred.label_ids
 
-  preds = pred.predictions.argmax(-1)
-  # Note: average = "weighted" will weigh the f1_score by class sample size
-  f1 = f1_score(labels, preds, average = "weighted")
-  acc = accuracy_score(labels, preds)
-  # Note: Need to return a dictionary
-  return {"accuracy": acc, "f1": f1}
+    preds = pred.predictions.argmax(-1)
+    # Note: average = "weighted" will weigh the f1_score by class sample size
+    f1 = f1_score(labels, preds, average="weighted")
+    acc = accuracy_score(labels, preds)
+    # Note: Need to return a dictionary
+    return {"accuracy": acc, "f1": f1}
 
 def tokenize(batch):            # 4
 

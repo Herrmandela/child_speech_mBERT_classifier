@@ -194,7 +194,7 @@ import multiclass_datavis, sample_sentences
 #multiclass_datavis.multiclass_confusion_matrix(experiment_choice, depth_choice, user_input)              # 17
 multiclass_datavis.multiclass_training_and_validation_plot(experiment_choice, depth_choice, user_input)  # 18
 
-sample_sentences.multiclass_sample_sentences(experiment_choice, depth_choice, user_input)
+sample_sentences.multiclass_sample_sentences()
 
 import mcc_data_prep
 #import mcc_evaluation
@@ -206,6 +206,6 @@ from functionality import multiclass_save_model, multiclass_load_model
 
 output_dir = multiclass_save_model()                            # 22
 
-multiclass_load_model(output_dir)                               # 23
+#multiclass_load_model(output_dir)                               # 23
 
 

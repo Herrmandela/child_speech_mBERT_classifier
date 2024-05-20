@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
+
 from mcc_evaluation import matthews_set, mcc
 
 
@@ -209,96 +211,6 @@ def plotMCC(user_input, depth_choice, experiment_choice):
 
     # print(experiment_choice, depth_choice, user_input, 'MCC Score per Batch')
 
-#**********************************************************************************************************************#
-#  Multiclass Confusion Matrix
-#**********************************************************************************************************************#
-
-def multiclass_confusion_matrix(experiment_choice, depth_choice, user_input):       # 17
-
-    print()
-    print("17")
-    print(" MultiClass confusion Matrix +++++ in data_visualization.py")
-
-
-    # With the predictions, we can plot the confusion matrix.
-    cm = confusion_matrix(text_encoded["val"]['label'], y_preds, normalize="true")
-
-    labels = ['incorrect', 'pass', 'acceptable ', 'correct']
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
-    disp.plot(cmap="Blues", values_format=".2f", colorbar=False)
-
-    plt.grid(False)
-
-    plt.title(experiment_choice, depth_choice, user_input," Confusion Matrix")
-
-
-    Macro_f1_SENT = []
-    for elem in trainer.state.log_history:
-        if 'eval_f1_macro_for_sentence_structure' in elem.keys():
-            Macro_f1_SENT.append(elem['eval_f1_macro_for_sentence_structure'])
-
-    Macro_f1_CELF = []
-    for elem in trainer.state.log_history:
-        if 'eval_f1_macro_for_CELF' in elem.keys():
-            Macro_f1_CELF.append(elem['eval_f1_macro_for_CELF'])
-
-    Macro_f1_TOLD = []
-    for elem in trainer.state.log_history:
-        if 'eval_f1_macro_for_TOLD' in elem.keys():
-            Macro_f1_TOLD.append(elem['eval_f1_macro_for_TOLD'])
-
-    eval_loss = []
-    for elem in trainer.state.log_history:
-        if 'eval_loss' in elem.keys():
-            eval_loss.append(elem['eval_loss'])
-
-
-    print(experiment_choice, depth_choice, user_input, "Model")
-
-    return Macro_f1_SENT, Macro_f1_TOLD, Macro_f1_CELF, eval_loss
-
-#**********************************************************************************************************************#
-# Multi-classification training and validation polt.
-#**********************************************************************************************************************#
-
-def multiclass_training_and_validation_plot(experiment_choice, depth_choice, user_input):        # 18
-
-    print()
-    print("18")
-    print("multiclass training and validation plot +++++ in data_visualization.py")
-    print()
-
-
-    import matplotlib.pyplot as plt
-    %matplotli inline
-
-    import seaborn as sns
-
-    # Use plot styling from seaborn.
-    sns.set(style='darkgrid')
-
-    # Increase the plot size and font size
-    sns.set(font_scale=1.5)
-    plt.rcParams["figure.figsize"] = (12, 6)
-
-    # Plot the learning curve.
-    plt.plot(eval_loss, label='Validation')
-
-    plt.plot(Macro_f1_SENT, label='Sentence_structure_f1')
-    plt.plot(Macro_f1_TOLD, label='TOLD_f1')
-    plt.plot(Macro_f1_CELF, label='CELF_f1')
-
-    # Label the plot
-    plt.title(experiment_choice, depth_choice, user_input, "Training & Validation Loss")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend()
-
-    plt.xticks()
-
-    plt.show()
-
-    print(experiment_choice, depth_choice, user_input, "Training & Validation Loss")
 
 
 #**********************************************************************************************************************#
@@ -376,7 +288,7 @@ def augmented_training_and_validation_plot(experiment_choice, depth_choice, user
     print(experiment_choice, depth_choice, user_input, " Training & Validation Loss")
 
 #**********************************************************************************************************************#
-# Multiclass Confusion Matrix
+# Augmented Confusion Matrix
 #**********************************************************************************************************************#
 
 

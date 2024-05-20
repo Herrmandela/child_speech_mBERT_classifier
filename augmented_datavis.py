@@ -2,9 +2,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-print()
-print()
-print("+++++++In augmented_datavis.py+++++++")
 
 #**********************************************************************************************************************#
 # Augmented MccPlot
@@ -23,7 +20,8 @@ def augmented_mccPlot(experiment_choice, depth_choice, user_input):       # 18
     ax.hlines(mcc, *ax.get_xlim())
     ax.annotate(f'Total MCC:\n {mcc:.3f}', xy=(ax.get_xlim()[1], mcc))
 
-    plt.title(f"{experiment_choice} {depth_choice} {user_input}  MCC Score per Batch")
+
+    plt.title(f"{experiment_choice} {depth_choice} {user_input} Model - MCC Score per Batch")
     plt.ylabel('MCC Score (-1 to +1)')
     plt.xlabel('Batch #')
     plt.show()
@@ -58,10 +56,11 @@ def augmented_training_and_validation_plot(experiment_choice, depth_choice, user
     plt.plot(accuracy, 'b-+', label='Accuracy')
 
     # Label the plot
-    plt.title(f"{experiment_choice} {depth_choice} {user_input} Training & Validation Loss")
+    plt.title(f"{experiment_choice} {depth_choice} {user_input} Model - Training & Validation Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend()
+    #plt.xticks([1, 2, 3, 4, 5])
 
     plt.show()
 

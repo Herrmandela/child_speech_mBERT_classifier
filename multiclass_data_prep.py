@@ -11,9 +11,7 @@ from multiclass_load_data import df, ALL_LABELS # X
 
 
 # # Define PATH
-PATH = "/content/drive/MyDrive/data/mBERT"
-
-#PATH = "/Users/ph4533/Desktop/PyN4N/Py38/gn4n/mBERT"
+PATH = "/data/mBERT"
 
 # # Define the mBERT Tokenizer
 tokenizer = BertTokenizer.from_pretrained(PATH, do_lower_case=True)
@@ -45,9 +43,9 @@ train.shape, val.shape, test.shape
 #************def multiclass_data_pandafication():   # 5
 
 
-train_ds = pd.read_csv("/content/dfTrain.csv").astype(str)
-val_ds = pd.read_csv("/content/dfVal.csv").astype(str)
-test_ds = pd.read_csv("/content/dfTest.csv").astype(str)
+train_ds = pd.read_csv("/dfTrain.csv").astype(str)
+val_ds = pd.read_csv("/dfVal.csv").astype(str)
+test_ds = pd.read_csv("/dfTest.csv").astype(str)
 
 #************
 
@@ -156,7 +154,7 @@ def dataset_test_evaluation_greek():      # 7
 
 def tokenize(batch):  # 4
 
-    PATH = "/content/drive/MyDrive/data/mBERT"
+    PATH = "/data/mBERT"
 
     # Define the tokenizer
     tokenizer = AutoTokenizer.from_pretrained(PATH)
@@ -181,4 +179,3 @@ texten = texten.remove_columns(['token_type_ids'])
     # Since the model expects tensors as inputs,
     # we will convert the input_ids and attention_mask columns to the "torch" format.
 texten.set_format("torch", columns = ["input_ids", "attention_mask", "CELF_SCORING"])
-

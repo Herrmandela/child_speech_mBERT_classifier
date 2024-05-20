@@ -23,7 +23,7 @@ def multiclass_plotMCC(user_input, depth_choice, experiment_choice):
     ax.hlines(mcc, *ax.get_xlim())
     ax.annotate(f'Total MCC:\n {mcc:.3f}', xy=(ax.get_xlim()[1], mcc))
 
-    plt.title(f"{experiment_choice} {depth_choice} {user_input}  MCC Score per Batch")
+    plt.title(f"{experiment_choice} {depth_choice} {user_input} Model -  MCC Score per Batch")
     plt.ylabel('MCC Score (-1 to +1)')
     plt.xlabel('Batch #')
     plt.show()

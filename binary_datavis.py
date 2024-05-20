@@ -24,7 +24,7 @@ def plotValidationAndLoss(user_input, depth_choice, experiment_choice):
     plt.plot(df_stats['Valid. Loss'], 'g-o', label='Validation')
 
     # Label the plot
-    plt.title(f"{experiment_choice} {depth_choice} {user_input} Training & Validation Loss")
+    plt.title(f"{experiment_choice} {depth_choice} {user_input} Model - Training & Validation Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend()
@@ -53,7 +53,7 @@ def plotMCC(user_input, depth_choice, experiment_choice):
     ax.hlines(mcc, *ax.get_xlim())
     ax.annotate(f'Total MCC:\n {mcc:.3f}', xy=(ax.get_xlim()[1], mcc))
 
-    plt.title(f"{experiment_choice} {depth_choice} {user_input} MCC Score per Batch")
+    plt.title(f"{experiment_choice} {depth_choice} {user_input} Model - MCC Score per Batch")
     plt.ylabel('MCC Score (-1 to +1)')
     plt.xlabel('Batch #')
 

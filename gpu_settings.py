@@ -1,5 +1,4 @@
-import torch
-device = torch.device("cuda")
+device = ""
 
 def gpu_settings1():
 
@@ -20,6 +19,8 @@ def gpu_settings1():
     return device_name
 
 def gpu_settings2():
+
+    global device
 
     print()
     print("GPU Settings2: returns device in GPU_Settings.py")

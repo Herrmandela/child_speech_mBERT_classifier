@@ -158,8 +158,11 @@ def save_model():                   # 18
 
 def load_model(output_dir):         # 19
 
-    from transformers import AutoModelForSequenceClassification, AutoTokenizer
-    from binary_one import device
+    #     from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+    from transformers import BertForSequenceClassification, BertTokenizer
+
+    device = torch.device("mps")
     from sample_sentences import input_texts
 
     print("output_dir is %s" % output_dir)
@@ -174,10 +177,10 @@ def load_model(output_dir):         # 19
     id2label = {0: "INCORRECT", 1: "CORRECT"}
 
     # Load a trained model and vocabulary that you have fine-tuned
-    model = AutoModelForSequenceClassification.from_pretrained(output_dir, num_labels=2, id2label=id2label)
+    model = BertForSequenceClassification.from_pretrained(output_dir, num_labels=2, id2label=id2label)
 
     #model = model_class.from_pretrained(output_dir)
-    tokenizer = AutoTokenizer.from_pretrained(output_dir)
+    tokenizer = BertTokenizer.from_pretrained(output_dir)
 
     # Copy the model to the GPU.
     model.cuda()
@@ -198,9 +201,9 @@ def load_model(output_dir):         # 19
 
       output_preds.append(item)
 
-      for item in output_preds:
-        print(item)
-    #
+    for item in output_preds:
+      print(item)
+
     return output_dir
 
 #**********************************************************************************************************************#
@@ -260,8 +263,10 @@ def multiclass_load_model(output_dir):          # 23
 
     # Load a trained model and vocabulary that you have fine-tuned
     model = BertForSequenceClassification.from_pretrained(output_dir,
-                                                               num_labels=2,
-                                                               id2label=id2label)
+                                                          num_labels=2,
+                                                          id2label=id2label,
+                                                          ignore_mismatched_sizes=True
+                                                          )
 
     #model = model_class.from_pretrained(output_dir)
     tokenizer = BertTokenizer.from_pretrained(output_dir)
@@ -341,4 +346,3 @@ def augmented_eng_test():
     #
     # print('\nThe predictions for the sentence "The parent cooked a tasty dish." are:\n')
     # preds_English
-

@@ -31,11 +31,10 @@ def multiclass_load_english():      # 1
     print("1")
     print("Loading English ++++++ in multiclass_load_data.py")
 
-    df = pd.read_csv("/content/drive/MyDrive/data/english/englishData.csv",
+    df = pd.read_csv("/english/englishData.csv",
                      on_bad_lines='skip',
                      encoding='ISO-8859-1'
                      )
-
 
     #df.loc[df.TOLD_SCORING ==0].sample(5)[['STRUCTURE','TARGET','RESPONSE','CELF_SCORING','TOLD_SCORING']]
 
@@ -91,7 +90,7 @@ def multiclass_load_farsi():           # 1
     print("1")
     print("Loading Farsi ++++++ in multiclass_load_data.py")
 
-    df = pd.read_excel("/content/drive/MyDrive/data/farsi/farsiMLC.xls",
+    df = pd.read_excel("/farsi/farsiMLC.xls",
                      on_bad_lines='skip')
 
     df.dropna()
@@ -145,7 +144,7 @@ def multiclass_load_greek():        # 1
     print("1")
     print("Loading Greek ++++++ in multiclass_load_data.py")
 
-    df = pd.read_csv("/content/drive/MyDrive/data/greek/greekData.csv",
+    df = pd.read_csv("/greek/greekData.csv",
                      on_bad_lines='skip')
 
     print('Number of test sentences: {:,}\n'.format(df.shape[0]))
@@ -196,7 +195,7 @@ def multiclass_load_all():      # 1
     print("1")
     print("Loading Melange ++++++ in multiclass_load_data.py")
 
-    df = pd.read_csv("/content/drive/MyDrive/data/multilingual/allData.csv",
+    df = pd.read_csv("/multilingual/allData.csv",
                      keep_default_na=False,
                      sep = ";")
 

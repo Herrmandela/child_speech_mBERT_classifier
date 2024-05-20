@@ -1,66 +1,18 @@
-print()
-print()
-print("|| +++In augmented_training.py +++ Loaded in augmented_three.py ||")
+import torch
+from transformers import AutoTokenizer, BertTokenizer, Trainer, TrainerCallback, TrainingArguments, AutoModelForSequenceClassification
+import gc
+import numpy as np
 
-from augmented_data_prep import sentences, text_encoded
+from augmented_data_prep import text_encoded
 from augmented_metrics import compute_metrics
 
 # Set the model path
-PATH = "/content/drive/MyDrive/data/mBERT"
-
-#PATH = "/Users/ph4533/Desktop/PyN4N/Py38/gn4n/mBERT"
+PATH = "/mBERT"
 
 # Define the tokenizer
+#tokenizer = AutoTokenizer.from_pretrained(PATH)
+
 tokenizer = BertTokenizer.from_pretrained(PATH)
-
-#**********************************************************************************************************************#
-# # Compute Metrics
-#**********************************************************************************************************************#
-
-
-"""
-#**********************************************************************************************************************#
-# # Define Tokenization Process for the Augmented-Models
-#**********************************************************************************************************************#
-# Define a function to compute two metrics--accuracy and f1 score
-def compute_metrics(pred):
-  # True labels
-  labels = pred.label_ids
-
-  preds = pred.predictions.argmax(-1)
-  # Note: average = "weighted" will weigh the f1_score by class sample size
-  f1 = f1_score(labels, preds, average = "weighted")
-  acc = accuracy_score(labels, preds)
-  # Note: Need to return a dictionary
-  return {"accuracy": acc, "f1": f1}
-
-def tokenize(batch):            # 4
-    
-    global PATH, tokenizer 
-
-    return tokenizer(
-        batch["text"],
-        # Pad the examples with zeros to the size of the longest one in a batch
-        padding = True, 
-        # Truncate the examples to the model’s maximum context size (which is 512 for this model)
-        truncation = True)
-
-# Once we’ve defined a processing function, we can apply it across all the splits in the DataDict.
-text_encoded = sentences.map(tokenize, batched=True, batch_size=None)
-
-    # Apply the tokenize function on the full dataset as a single batch
-    # Note: This ensures that the input tensors and attention masks have the same shape globally
-    # Alternatively, we can specify max_length in the tokenize() function to ensure the same
-
-    # Remove the text column from the encoded DatasetDict because the model does not use# it.
-text_encoded = text_encoded.remove_columns(['token_type_ids', 'text'])
-
-    # Since the model expects tensors as inputs,
-    # we will convert the input_ids and attention_mask columns to the "torch" format.
-text_encoded.set_format("torch", columns = ["input_ids", "attention_mask", "label"])
-"""
-
-
 #**********************************************************************************************************************#
 # # Label and ID Dictionaries for the Augmented-Models
 #**********************************************************************************************************************#
@@ -97,7 +49,6 @@ model = AutoModelForSequenceClassification.from_pretrained(
 
 
 def augmented_training_vanilla():
-
 
     print()
     print("")

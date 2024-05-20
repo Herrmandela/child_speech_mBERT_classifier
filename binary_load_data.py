@@ -26,7 +26,7 @@ def load_english():
     print("Loading English ++++++ in load_data.py")
     print()
 
-    df = pd.read_csv("/content/drive/MyDrive/data/english/englishData.csv",
+    df = pd.read_csv("/englishData.csv",
                      on_bad_lines='skip',
                      encoding='ISO-8859-1'
                      )
@@ -52,7 +52,7 @@ def load_farsi():
     print("Loading Farsi ++++++ in load_data.py")
     print()
 
-    df = pd.read_excel("/content/drive/MyDrive/data/farsi/farsiMLC.xls")
+    df = pd.read_excel("/farsiMLC.xls")
 
 
     df = df.drop(['ChildID','STRUCTURE', 'Test Number',
@@ -83,7 +83,7 @@ def load_greek():
     print("Loading Greek ++++++ in load_data.py")
     print()
 
-    df = pd.read_csv("/content/drive/MyDrive/data/greek/greekData.csv",
+    df = pd.read_csv("/greekData.csv",
                      on_bad_lines='skip')
 
 #    df.loc[df.TOLD_SCORING == 0].sample(5)[['STRUCTURE', 'RESPONSE', 'CELF_SCORING', 'TOLD_SCORING']]
@@ -107,7 +107,7 @@ def load_all():
     print("Loading Melange ++++++ in load_data.py")
     print()
 
-    df = pd.read_csv("/content/drive/MyDrive/data/multilingual/allData.csv",
+    df = pd.read_csv("/allData.csv",
                      keep_default_na=False,
                      sep = ";")
 

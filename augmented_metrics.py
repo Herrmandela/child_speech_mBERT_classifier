@@ -1,3 +1,5 @@
+from sklearn.metrics import accuracy_score, f1_score
+
 #**********************************************************************************************************************#
 # # Define Training Arguments for the Augmented-Models
 #**********************************************************************************************************************#
@@ -19,20 +21,3 @@ def compute_metrics(pred):
   acc = accuracy_score(labels, preds)
   # Note: Need to return a dictionary
   return {"accuracy": acc, "f1": f1}
-
-"""
-def preds_output(trainer):      # 12 for Augmented
-
-  global y_preds, preds_output
-
-  preds_output = trainer.predict(text_encoded["val"])
-
-  preds_output.metrics
-
-  y_preds = np.argmax(preds_output.predictions, axis = 1)
-
-  # Model prediction metrics on the test set
-  preds_output = trainer.predict(text_encoded["test"])
-  preds_output.metrics
-
-  return y_preds, preds_output"""

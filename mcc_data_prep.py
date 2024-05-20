@@ -1,4 +1,9 @@
-# from torch.utils.data import TensorDataset
+import torch
+from transformers import BertTokenizer
+from torch.utils.data import TensorDataset, SequentialSampler, DataLoader
+from sklearn.metrics import matthews_corrcoef
+import numpy as np
+
 from menus import experiment_choice
 from gpu_settings import device
 
@@ -20,13 +25,9 @@ def mcc_data_prep():
     # Load the dataset into a Pandas dataframe. Originally, this is where the
     # Multilingual data was loaded for model evaluation.
 
-    df_mcc = pd.read_csv("/content/drive/MyDrive/data/Multilingual/allData.csv",
+    df_mcc = pd.read_csv("/Multilingual/allData.csv",
                      keep_default_na=False,
                      sep = ";")
-
-    # df_mcc = pd.read_csv("/Users/ph4533/Desktop/PyN4N/Py38/gn4n/data/multilingual/allData.csv",
-    #                  keep_default_na=False,
-    #                  sep = ";")
 
     # Report the number of sentences.
     #print('Number of test sentences: {:,}\n'.format(df_test.shape[0]))

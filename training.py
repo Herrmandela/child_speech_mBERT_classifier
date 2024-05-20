@@ -14,9 +14,7 @@ from functionality import train_dataloader, validation_dataloader, format_time, 
 print()
 print("Defining PATH, epochs and num_labels ++++++ in training.py")
 
-PATH = "/content/drive/MyDrive/data/mBERT"
-
-#PATH = "/Users/ph4533/Desktop/PyN4N/Py38/gn4n/mBERT"
+PATH = "/data/mBERT"
 
 epochs = 2
 

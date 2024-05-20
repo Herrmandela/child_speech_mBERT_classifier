@@ -1,5 +1,5 @@
 from transformers import BertTokenizer, BertForSequenceClassification, Trainer, TrainerCallback, TrainingArguments
-#
+
 import torch
 from multiclass_data_prep import ds
 from multiclass_metrics import *
@@ -23,9 +23,7 @@ BATCH_SIZE = 32
 
 device = torch.device("cuda")
 
-PATH = "/content/drive/MyDrive/data/mBERT"
-
-#PATH = "/Users/ph4533/Desktop/PyN4N/Py38/gn4n/mBERT"
+PATH = "/data/mBERT"
 
 tokenizer = BertTokenizer.from_pretrained(PATH, do_lower_case=True)
 
@@ -209,6 +207,3 @@ y_preds = np.argmax(preds_output.predictions, axis=1)
 preds_output = trainer.predict(ds["test"])
 
 preds_output.metrics
-
-
-

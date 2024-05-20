@@ -32,9 +32,9 @@ def sampleSentences():
 
     print()
     print("Sample Sentences in sample_sentences.py")
+    from functionality import output_dir
 
-
-    print(experiment_choice,"-", depth_choice,"-", user_input,"Sample Sentences")
+    print(f"{experiment_choice} {depth_choice} {user_input} Model - Sample Sentences")
     for text in input_texts:
       # Encode the text
       input = tokenizer(text, truncation=True, padding="max_length",
@@ -50,16 +50,18 @@ def sampleSentences():
       print('The sentence: "',text, '"  is:', prediction)
 
 
-def multiclass_sample_sentences(experiment_choice, depth_choice, user_input):          # 19
+def multiclass_sample_sentences():          # 19
 
     from multiclass_training import model, id2label
     from multiclass_metrics import get_preds_from_logits
     from multiclass_load_data import LABEL_REPOSITORY
+    from multiclass import experiment_choice, depth_choice, user_input
+
     print()
     print("19")
     print("multiclass Samples in sample_sentences.py")
     # # Define PATH
-    PATH = "/content/drive/MyDrive/data/mBERT"
+    PATH = "/data/mBERT"
 
     # # Define the mBERT Tokenizer
     tokenizer = BertTokenizer.from_pretrained(PATH, do_lower_case=True)
@@ -75,7 +77,7 @@ def multiclass_sample_sentences(experiment_choice, depth_choice, user_input):   
     preds = get_preds_from_logits(logits)
     decoded_preds = [[id2label[i] for i, l in enumerate(row) if l == 1] for row in preds]
 
-    print(experiment_choice,"-", depth_choice,"-", user_input,"Sample Sentences")
+    print(f"{experiment_choice} {depth_choice} {user_input} Model - Sample Sentences")
     for text, pred in zip(input_texts, decoded_preds):
         print(text)
         print("STRUCTURE:", [LABEL_REPOSITORY[l] for l in pred if l.startswith('S')])
@@ -85,16 +87,16 @@ def multiclass_sample_sentences(experiment_choice, depth_choice, user_input):   
 
 
 def augmented_sample_sentences():           # 16
-    
 
     from augmented_training import output_dir
+    global output_dir
     print("Output Directory: ", output_dir)
     classifier = pipeline(
         "text-classification",
         model=os.path.join(output_dir),
         tokenizer=os.path.join(output_dir))          # 16
 
-    print(experiment_choice,"-", depth_choice,"-", user_input,"Sample Sentences")
+    #print(experiment_choice,"-", depth_choice,"-", user_input,"Sample Sentences")
     for text in input_texts:
         prediction = classifier(text)
         print('the sentence: "', text,'" is:', prediction)
