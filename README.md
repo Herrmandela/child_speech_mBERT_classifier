@@ -16,7 +16,7 @@ There are two initial settings - depending on the type of GPU you can change spe
 gpu_settings.py. The GPU settings can also bee toggled in the individual paradigm files, *binary_one.py*, *multiclass_two.py* 
 and *augmented_three.py*. 
 
-The program then gives you the following options:
+The program then gives you the following options (*see below for explanations*) :
 
 
 #### Choice of model: 
