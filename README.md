@@ -8,7 +8,31 @@
 between L2 learner proclivities and underlying language impairment 
 through downstream classification tasks.
 
+## Instructions 
 
+To use this classifier, run *main.py*
+
+There are two initial settings - depending on the type of GPU you can change specify CUDA or METAL (msp) in the 
+gpu_settings.py. The GPU settings can also bee toggled in the individual paradigm files, *binary_one.py*, *multiclass_two.py* 
+and *augmented_three.py*. 
+
+The program then gives you the following options. 
+
+
+Choice of model: - Binary for binary classification
+                 - Multiclass for multiclass classification
+                 - Augmented for models with hybrid data formation
+
+
+Choice of language: - English Dataset
+                    - Farsi Dataset
+                    - Greek Dataset
+                    - Multilingual Dataset
+
+
+Choice of Model Depth: - Vanilla
+                       - Shallow
+                       - Inherent
 
 ## Datasets
 
