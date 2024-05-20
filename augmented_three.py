@@ -166,7 +166,7 @@ augmented_save_model()                                  # 14
 augmented_load_model(output_dir)                                  # 15
 
 from sample_sentences import augmented_sample_sentences
-augmented_sample_sentences()                            # 16
+augmented_sample_sentences(experiment_choice, depth_choice, user_input)                            # 16
 
 from mcc_evaluation import augmented_mcc_evaluation
 augmented_mcc_evaluation()                              # 17
@@ -241,9 +241,9 @@ elif augmentation_choice == 'exit':
 #**********************************************************************************************************************#
 # # Samples and MCC of Augmented
 #**********************************************************************************************************************#
-
+experiment_choice = experiment_choice
 augmented_load_model(output_dir)
-augmented_sample_sentences()
+augmented_sample_sentences(experiment_choice, depth_choice, user_input)
 
 augmented_mcc_evaluation()                                                           # 23
 augmented_mccPlot(experiment_choice, depth_choice, user_input)                       # 24

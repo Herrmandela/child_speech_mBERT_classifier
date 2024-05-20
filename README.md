@@ -1,4 +1,4 @@
-# <ins>Child Speech  Classifier</ins>
+# Child Speech  Classifier
 
 - Automatic child speech classification system based on a multilingual Large Language Model (LLMs)
 
@@ -8,9 +8,38 @@
 between L2 learner proclivities and underlying language impairment 
 through downstream classification tasks.
 
+## Instructions 
+
+To use this classifier, run *main.py*
+
+There are two initial settings - depending on the type of GPU you can change specify CUDA or METAL (msp) in the 
+gpu_settings.py. The GPU settings can also bee toggled in the individual paradigm files, *binary_one.py*, *multiclass_two.py* 
+and *augmented_three.py*. 
+
+The program then gives you the following options (*see below for explanations*) :
 
 
-## <ins>Datasets</ins>
+#### Choice of model: 
+                    - Binary for binary classification
+                    - Multiclass for multiclass classification
+                    - Augmented for models with hybrid data formation
+
+
+#### Choice of language: 
+                    - English Dataset
+                    - Farsi Dataset
+                    - Greek Dataset
+                    - Multilingual Dataset
+
+
+#### Choice of Model Depth: 
+                       - Vanilla
+                       - Shallow
+                       - Inherent
+
+## Datasets
+
+*Please DM for curated datasets* 
 
 #### *English*
 
@@ -18,6 +47,7 @@ through downstream classification tasks.
 
 #### *Greek*
 
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Datasets.png" width="500" ></a>
 
 ## <ins>Model Paradigms</ins>
 
@@ -70,7 +100,9 @@ inappropriate synonym insertion and word omission.
 After the production of the synthetic data, it is automatically incorporated 
 to the training data forming cohesive hybrid dataset.
 
-## <ins>Model Depth</ins>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/augFigure.png" width="500" ></a>
+
+## Model Depth
 
 
 ### *Vanilla*
@@ -85,6 +117,14 @@ Shallow Layers Frozen + Output Layer
 
 All Layers Frozen Except for Input and Output Layers 
 
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/layerFreeze.png" width="500" ></a>
+
+
+## Metrics
+
+### *Sample Sentence*
+
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/sampleSents.png" width="500" ></a>
 
 ## Instruction 
 

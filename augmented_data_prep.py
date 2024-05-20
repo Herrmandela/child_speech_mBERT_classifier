@@ -1,12 +1,18 @@
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
 import pandas as pd
+<<<<<<< HEAD
 from transformers import  AutoTokenizer, BertTokenizer
 from datasets import Dataset, DatasetDict
+=======
+from datasets import Dataset,load_metric, DatasetDict
+from transformers import AutoTokenizer
+>>>>>>> 151ab64f7d644a76f6b7fe2f5bf7d9bdafb60962
 
 from augmented_load_data import df, All_text
 
 # Set the model path
+<<<<<<< HEAD
 
 PATH = "Path of mBERT model - download Transformer from HuggingFace"
 
@@ -16,6 +22,18 @@ PATH = "Path of mBERT model - download Transformer from HuggingFace"
 tokenizer = BertTokenizer.from_pretrained(PATH, do_lower_case=True)
 
 sentences = []
+=======
+PATH = "/content/drive/MyDrive/data/LBERT"
+
+# Define the tokenizer
+tokenizer = AutoTokenizer.from_pretrained(PATH)
+
+sentences = []
+
+print()
+print()
+print("|| +++ In augmented_data_prep.py +++ Loaded ||")
+>>>>>>> 151ab64f7d644a76f6b7fe2f5bf7d9bdafb60962
 
 # **********************************************************************************************************************#
 # SPLIT MULTICLASS DATA INTO TRAINING, VALIDATION AND TESTING DATA - *****
@@ -37,9 +55,15 @@ train.shape, val.shape, test.shape
 
 #************
 
+<<<<<<< HEAD
 train_ds = pd.read_csv("/dfTrain.csv").astype(str)
 val_ds = pd.read_csv("/dfVal.csv").astype(str)
 test_ds = pd.read_csv("/dfTest.csv").astype(str)
+=======
+train_ds = pd.read_csv("/content/dfTrain.csv").astype(str)
+val_ds = pd.read_csv("/content/dfVal.csv").astype(str)
+test_ds = pd.read_csv("/content/dfTest.csv").astype(str)
+>>>>>>> 151ab64f7d644a76f6b7fe2f5bf7d9bdafb60962
 
 print("val_ds : ", type(val_ds))
 # ************
@@ -77,13 +101,13 @@ def compute_metrics(pred):
     return {"accuracy": acc, "f1": f1}
 
 def tokenize(batch):            # 4
-
-    global PATH, tokenizer
+    
+    global PATH, tokenizer 
 
     return tokenizer(
         batch["text"],
         # Pad the examples with zeros to the size of the longest one in a batch
-        padding = True,
+        padding = True, 
         # Truncate the examples to the model’s maximum context size (which is 512 for this model)
         truncation = True)
 

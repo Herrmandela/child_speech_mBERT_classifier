@@ -16,12 +16,19 @@ import torch
 from augmented_data_prep import train, ds_val, ds_test
 
 # Set the model path
+<<<<<<< HEAD
 PATH = "Path of pretrained mBERT model"
 
 # Define the tokenizer
 #tokenizer = AutoTokenizer.from_pretrained(PATH)
 
 tokenizer = BertTokenizer.from_pretrained(PATH)
+=======
+PATH = "/content/drive/MyDrive/data/mBERT"
+
+# Define the tokenizer
+tokenizer = AutoTokenizer.from_pretrained(PATH)
+>>>>>>> 151ab64f7d644a76f6b7fe2f5bf7d9bdafb60962
 
 aug_syn = naw.SynonymAug(
     aug_src='wordnet',
@@ -34,8 +41,12 @@ aug_emb = naw.ContextualWordEmbsAug(
   # You can also choose "insert"
   action="substitute",
   # Use GPU
+<<<<<<< HEAD
   device='msp')
 #   device='cuda')
+=======
+  device='cuda')
+>>>>>>> 151ab64f7d644a76f6b7fe2f5bf7d9bdafb60962
 
 #**********************************************************************************************************************#
 # # BACKTRANSLATION
@@ -46,9 +57,14 @@ aug_bt = naw.BackTranslationAug(
   from_model_name = "Helsinki-NLP/opus-mt-grk-en",
   # Translate from Greek back to English
   to_model_name = "Helsinki-NLP/opus-mt-en-grk",
+<<<<<<< HEAD
     # Use GPU
   device='msp')
 #   device='cuda')
+=======
+  # Use GPU
+  device = 'cuda')
+>>>>>>> 151ab64f7d644a76f6b7fe2f5bf7d9bdafb60962
 
 
 # **********************************************************************************************************************#
@@ -145,9 +161,15 @@ def evaluate_aug(aug_strategy, n, train, ds_val, ds_test):
 
     # Vertically concat the train set with the augmented texts
     train_augmented = pd.concat([train, ds_augmented_text_labels], axis = 0)
+<<<<<<< HEAD
 
     print("train_augmented : ", type(train_augmented))
 
+=======
+    
+    print("train_augmented : ", type(train_augmented))
+    
+>>>>>>> 151ab64f7d644a76f6b7fe2f5bf7d9bdafb60962
     # Convert the DataFrame to a Dataset (Aparche Arrow format)
     dset_train_augmented = Dataset.from_pandas(train_augmented)
 
@@ -221,9 +243,14 @@ def evaluate_aug(aug_strategy, n, train, ds_val, ds_test):
     preds_output = trainer.predict(text_encoded["test"])
     print(preds_output.metrics)
 
+<<<<<<< HEAD
     # Import predefined output_dir
     model.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
+=======
+    model.save_pretrained("/content/drive/MyDrive/gn4nOutput")
+    tokenizer.save_pretrained("/content/drive/MyDrive/gn4nOutput")
+>>>>>>> 151ab64f7d644a76f6b7fe2f5bf7d9bdafb60962
 
     # Remove all elements from the lists
     augmented_text.clear()
