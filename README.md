@@ -39,6 +39,8 @@ The program then gives you the following options (*see below for explanations*) 
 
 ## Datasets
 
+*Please DM for curated datasets* 
+
 #### *English*
 
 #### *Farsi*
