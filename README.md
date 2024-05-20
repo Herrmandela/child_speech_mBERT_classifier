@@ -19,20 +19,20 @@ and *augmented_three.py*.
 The program then gives you the following options:
 
 
-Choice of model: 
+#### Choice of model: 
                     - Binary for binary classification
                     - Multiclass for multiclass classification
                     - Augmented for models with hybrid data formation
 
 
-Choice of language: 
+#### Choice of language: 
                     - English Dataset
                     - Farsi Dataset
                     - Greek Dataset
                     - Multilingual Dataset
 
 
-Choice of Model Depth: 
+#### Choice of Model Depth: 
                        - Vanilla
                        - Shallow
                        - Inherent
