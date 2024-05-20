@@ -126,33 +126,6 @@ All Layers Frozen Except for Input and Output Layers
 
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/sampleSents.png" width="500" ></a>
 
-## Instruction 
-
-To use this classifier, run main.py.
-
-There are two initial settings - depending on the type of GPU you can change specify CUDA or METAL (msp) in the 
-gpu_settings.py. The GPU settings can also bee toggled in the individual paradigm files, binary.py, multiclass.py 
-and augmented.py. 
-
-The program then gives you the following options. 
-
-
-Choice of model: Binary for binary classification
-                 Multiclass for multiclass classification
-                 Augmented for models with hybrid data formation
-
-
-Choice of language: English Dataset
-                    Farsi Dataset
-                    Greek Dataset
-                    Multilingual Dataset
-
-
-Choice of Model Depth: Vanilla
-                       Shallow
-                       Inherent
-                        
-
 
 
 
