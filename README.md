@@ -44,21 +44,23 @@ Once it's done training you are prompted to choose a directory for your trained 
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Datasets.png" width="500" ></a>
 *Please DM for curated datasets* 
 
-#### *English*
+### *English*
 
 Data Distribution: 
 
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/english_SBS.png" width="300" ></a>
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/english_HOS.png" width="300" ></a>
 
-#### *Farsi*
+### *Farsi*
 
 Data Distribution:
 
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/farsi_SBS.png" width="300" ></a>
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/farsi_HOS.png" width="300" ></a>
 
-#### *Greek*
+### *Greek*
+
+Data Distribution:
 
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/greek_SBS.png" width="300" ></a>
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/greek_HOS.png" width="300" ></a>
@@ -71,6 +73,7 @@ performance as a multilingual binary classifier. Given a target
 sentence a model should accurately discern the felicity of a given 
 input by ascribing a score of either 0 or 1.
 
+See https://github.com/Herrmandela/TOLD_mBERT_Classifier for Binary Classification Jupyter Notebook. 
 
 ### *Multiclass Classification*
 
@@ -98,6 +101,8 @@ the vast amounts of multilingual data that was used to pretrain mBERT.
 The training data we use is not multilingual, while the test data is composed 
 of samples from our three datasets. 
 Our specific use case requires models that are capable of cross-linguistic GED.
+
+See https://github.com/Herrmandela/CELF_mBERT_Classifier for Binary Classification Jupyter Notebook.
 
 Thus, we want to determine how many data points, of which language, 
 at what parameter settings yields the best crosslingual model for our tasks.
