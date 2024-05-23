@@ -12,8 +12,9 @@ through downstream classification tasks.
 
 To use this classifier, run *main.py*
 
-There are two initial settings - depending on the type of GPU you can change specify CUDA or METAL (msp) in the 
-gpu_settings.py. The GPU settings can also bee toggled in the individual paradigm files, *binary_one.py*, *multiclass_two.py* 
+There are two initial settings - depending on the type of GPU you have, you can specify manually CUDA or METAL (msp) in the 
+gpu_settings.py - The default is CUDA. 
+The GPU settings can also bee toggled in the individual paradigm files, *binary_one.py*, *multiclass_two.py* 
 and *augmented_three.py*. 
 
 The program then gives you the following options (*see below for explanations*) :
@@ -33,21 +34,34 @@ The program then gives you the following options (*see below for explanations*) 
 
 
 #### Choice of Model Depth: 
-                       - Vanilla
-                       - Shallow
-                       - Inherent
+                    - Vanilla
+                    - Shallow
+                    - Inherent
+
+Once it's done training you are prompted to choose a directory for your trained model. 
 
 ## Datasets
-
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Datasets.png" width="500" ></a>
 *Please DM for curated datasets* 
 
 #### *English*
 
+Data Distribution: 
+
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/english_SBS.png" width="500" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/english_HOS.png" width="500" ></a>
+
 #### *Farsi*
+
+Data Distribution:
+
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/farsi_SBS.png" width="500" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/farsi_HOS.png" width="500" ></a>
 
 #### *Greek*
 
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/Datasets.png" width="500" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/greek_SBS.png" width="500" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/greek_HOS.png" width="500" ></a>
 
 ## <ins>Model Paradigms</ins>
 
@@ -125,33 +139,6 @@ All Layers Frozen Except for Input and Output Layers
 ### *Sample Sentence*
 
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/sampleSents.png" width="500" ></a>
-
-## Instruction 
-
-To use this classifier, run main.py.
-
-There are two initial settings - depending on the type of GPU you can change specify CUDA or METAL (msp) in the 
-gpu_settings.py. The GPU settings can also bee toggled in the individual paradigm files, binary.py, multiclass.py 
-and augmented.py. 
-
-The program then gives you the following options. 
-
-
-Choice of model: Binary for binary classification
-                 Multiclass for multiclass classification
-                 Augmented for models with hybrid data formation
-
-
-Choice of language: English Dataset
-                    Farsi Dataset
-                    Greek Dataset
-                    Multilingual Dataset
-
-
-Choice of Model Depth: Vanilla
-                       Shallow
-                       Inherent
-                        
 
 
 
