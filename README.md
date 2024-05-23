@@ -73,7 +73,7 @@ performance as a multilingual binary classifier. Given a target
 sentence a model should accurately discern the felicity of a given 
 input by ascribing a score of either 0 or 1.
 
-See https://github.com/Herrmandela/TOLD_mBERT_Classifier for Binary Classification Jupyter Notebook. 
+ * See https://github.com/Herrmandela/TOLD_mBERT_Classifier for Binary Classification Jupyter Notebook. 
 
 ### *Multiclass Classification*
 
@@ -102,8 +102,6 @@ The training data we use is not multilingual, while the test data is composed
 of samples from our three datasets. 
 Our specific use case requires models that are capable of cross-linguistic GED.
 
-See https://github.com/Herrmandela/CELF_mBERT_Classifier for Binary Classification Jupyter Notebook.
-
 Thus, we want to determine how many data points, of which language, 
 at what parameter settings yields the best crosslingual model for our tasks.
 Building on the previous paradigms, in this final part we will evaluate the 
@@ -118,6 +116,8 @@ in natural settings. NlpAug can be configured to incorporate word order violatio
 inappropriate synonym insertion and word omission. 
 After the production of the synthetic data, it is automatically incorporated 
 to the training data forming cohesive hybrid dataset.
+
+ * See https://github.com/Herrmandela/CELF_mBERT_Classifier for Binary Classification Jupyter Notebook.
 
 <a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/augFigure.png" width="500" ></a>
 
