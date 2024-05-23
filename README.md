@@ -48,20 +48,20 @@ Once it's done training you are prompted to choose a directory for your trained 
 
 Data Distribution: 
 
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/english_SBS.png" width="500" ></a>
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/english_HOS.png" width="500" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/english_SBS.png" width="300" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/english_HOS.png" width="300" ></a>
 
 #### *Farsi*
 
 Data Distribution:
 
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/farsi_SBS.png" width="500" ></a>
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/farsi_HOS.png" width="500" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/farsi_SBS.png" width="300" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/farsi_HOS.png" width="300" ></a>
 
 #### *Greek*
 
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/greek_SBS.png" width="500" ></a>
-<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/greek_HOS.png" width="500" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/greek_SBS.png" width="300" ></a>
+<a href="url"><img src="https://github.com/Herrmandela/child_speech_mBERT_classifier/blob/main/greek_HOS.png" width="300" ></a>
 
 ## <ins>Model Paradigms</ins>
 
