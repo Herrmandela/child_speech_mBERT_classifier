@@ -164,7 +164,7 @@ def optimizer_and_scheduler():        # 8
     print("******+++++++++++++*******+++++++++++++****dataloader_length: ", train_dataloader)
     print("optimizer: ", optimizer)
 
-    epochs = int(input("Please enter the number of epochs - 4 are recommended: "))
+    epochs = int(input("Please enter the number of epochs: "))
     # The total number of training steps is the [number of batches] x [number of epochs] ** not equal to training samples!!
     total_steps = len(train_dataloader) * epochs
     print("******+++++++++++++*******+++++++++++++****total_steps: ", total_steps)
