@@ -33,7 +33,7 @@ model = BertForSequenceClassification.from_pretrained(
         label2id=label2id,  # A dictionary linking id to label
         )
 
-num_train_epochs = input("Please choose number of Epochs: (We recommend 3-4)")
+num_train_epochs = input("Please choose number of Epochs: ")
 #**********************************************************************************************************************#
 # # MODEL TRAINING DEPTH -  for layers training protocol
 #**********************************************************************************************************************#
