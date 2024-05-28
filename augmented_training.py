@@ -148,7 +148,7 @@ batch_size = 32
 max_length = 28
 
 # Number of epochs
-num_epochs = int(input("Please enter the number of epochs: (We recommend 3-4)"))
+num_epochs = int(input("Please enter the number of epochs: "))
 
 # Training argument
 training_args = TrainingArguments(
